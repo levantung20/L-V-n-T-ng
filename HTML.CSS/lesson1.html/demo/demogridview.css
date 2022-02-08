@@ -1,0 +1,85 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing:  border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  [class*="col-"] {
+    float: left;
+    padding: 15px;
+    border: 1px solid red;
+  }
+  
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+.border1px{
+    border: 1px solid red;
+}
+
+header{
+        height: 100px;
+        background-color: rgb(73, 182, 120);
+}
+h1{
+    line-height: 100px;
+    color:  white;
+    padding-left: 15px;
+}
+li{
+    list-style: none;
+    height: 50px;
+    margin-bottom : 20px; 
+    line-height: 50px;
+    background-color: tomato;
+    color: white;
+    padding-left: 15px;
+    transition: 0.4s;
+}
+li:hover{
+    background-color: rgb(196, 47, 21);
+    font-size: 20px;
+}
+img{
+    width: 320px;
+    visibility: hidden;
+
+
+}
+[class*="col-"] {
+    width: 100%;
+}
+@media only screen and (min-width : 768px ) {
+    img{
+        visibility: visible;
+    }
+    .col-1 {
+        width: 8.33%;
+    }
+    .col-2 {width: 16.66%;}
+    .col-3 {width: 25%;}
+    .col-4 {width: 33.33%;}
+    .col-5 {width: 41.66%;}
+    .col-6{width: 50%;}
+    .col-7{width: 58.33%;}
+    .col-8{width: 66.66%;}
+    .col-9{width: 75%;}
+    .col-10{width: 83.33%;}
+    .col-11 {width: 91.66%;}
+    .col-12 {width: 100%;}
+}

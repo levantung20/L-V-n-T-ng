@@ -1,0 +1,287 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeMo HTML</title>
+    <style>
+        table , td , th {
+            border: 1px solid black;
+            display: flexbox;
+        }
+
+    </style>
+</head>
+<body>
+    <p>họ và tên : Lê Văn Tùng</p>
+    <h1>VTI Academy</h1>
+    <h2>VTI Academy</h2>
+    <h3>VTI Academy</h3>
+    <h4>VTI Academy</h4>
+    <h5>VTI Academy</h5>
+    <h6>VTI Academy</h6>
+    <br>
+
+    <!-- Question2 -->
+        <ol>
+            <h3>Danh Sách Lớp Học</h3>
+            <li>Nguyễn Ngọc Duy</li>
+            <li>Nguyễn Ngọc Linh</li>
+            <li>Nguyễn Minh Anh</li>
+            <li>Lê Văn Tùng</li>
+            <li>Tống Quang Anh</li>
+            <li>Vũ Công Thành</li>
+        </ol>
+
+        <h2>A List in a list a list</h2>
+        <li>1.Cơm trưa</li>
+        <ul style="list-style-type: circle;">
+            <li>Cơm chiên hải sản</li>
+            <li>Cơm sờm non nấu canh</li>
+            <li>Cơm canh chua cá lóc</li>
+        </ul>
+
+        <li>2.Tráng miệng trái cây</li>
+        <ul style="list-style-type: circle;">
+            <li>Nho Tươi</li>
+            <li>Chuối </li>
+            <li>Táo</li>
+        </ul>
+        <!-- Question 3 -->
+            <b>This text is bold</b><br>
+            <i>This text is italic</i><br>
+            <p>This is <sup>subscript</sup>and <sup>superscpript</sup></p>
+
+            <em>This text is emphasized</em>
+
+          <h2><small>HTML Small Formating</small></h2><br>
+          <h2>HTML <mark>Marked</mark>Formating</h2> <br>
+          <p>The del element represents deleted (removed)text
+              My favortie color  is <del>blu</del> red
+          </p>
+
+          <p>The  ins element represents inserted (added)text
+              My favorite <ins>color</ins> is red
+          </p>
+
+
+
+
+        <!-- Question 4 -->
+        <h1>Register</h1>
+        <p>Please <b><i>fill in this from</b></i> to create an account</p>
+        <form action="/action_page.php">
+            <label for="fname">FullName</label><span style="color: red;">*</span><br>
+            <input type="text" name="fname" id="name" placeholder="nhập vào tên..."><br>
+            <label for="uname">UserName</label><span style="color: red;">*</span><br>
+            <input type="text" name="uname" id ="uname" placeholder="nhập vào tài khoản..."><br>
+            <label for="Pass">Password</label><span style="color: red;">*</span><br>
+            <input type="password" name="Pass" id= "Pas" placeholder="nhập mật khẩu..."><br>
+            <label for="Emai">Email</label> <span style="color: red;">*</span><br>
+            <input type="text" name="Email" id="Email" placeholder="nhập email..."><br>
+            <label for="Phone">TelePhone number</label> <span style="color: red;">*</span><br>
+            <input type="text" name="phone" id="phone" placeholder="nhập phone..."><br>
+        </form>
+            <p>Input Object:</p>
+            <input type="radio" id ="student" name="fav_lang" value="Student">
+            <label for="">Student</label>
+
+            <input type="radio" id ="Teacher" name="fav_lang" value="Teacher">
+            <label for="">Teacher</label><br>
+            
+            <p>Favorite:</p>
+            <input type="checkbox" id="badminton" name="fav" value="Badminton">
+            <label for="">Badminton</label>
+
+            <input type="checkbox" id="Volleyball" name="fav" value="Volleyball">
+            <label for="">Volleyball</label>
+
+            <input type="checkbox" id="football" name="fav" value="Football">
+            <label for="">Football</label><br>
+
+            <label for="diachi">Address</label><span style="color: red;">*</span><br>
+            <select  id="diachi">
+                <option value="thái bình">Thái Bình</option>
+                <option value="Hn">Hà Nội</option>
+                <option value="Bn">Bắc Ninh</option>
+                <option value="Hải">Hải Phòng</option>
+            </select>
+            
+
+            <form action="/action_page.php">
+                <label for="birthday">Birthday</label><span style="color: red;">*</span><br>
+                <input type="date" id="birthday" name="birthday">
+                <input type="submit">
+            </form>
+
+            <form>
+                <b>Your picture</b><br>
+                <input type="file" name="fileupload" accept="image/*" />
+            </form>
+            <button type="button" onclick="alert('HelloWord')">Đăng Ký</button><br>
+            <hr style="width: 50%;">
+            <!-- <iframe src="https://kenh14.vn/nop-cv-thanh-tich-qua-khung-co-gai-bi-that-nghiep-khong-hieu-ly-do-20200602164435032.chn" width="100%" height="100%"></iframe> -->
+
+            <h1 style="color: blue;">This is a heading</h1>
+
+            <p style="color:red;">This is a paragraph</p>
+
+            <p style="background-color:tomato;">Tomato</p>
+            <p style="background-color: orange;">Orange</p>
+            <p style="background-color:dodgerblue;">Dodgerblue</p>
+            <p style="background-color:mediumaquamarine;">mediumaquamarine</p>
+            <p style="background-color:Gray;">Gray</p>
+            <p style="background-color:slateblue;">slateblue</p>
+            <p style="background-color:violet;">Violet</p>
+            <p style="background-color:lightblue;">Lightblue</p>
+
+            <p style="border:solid tomato;">HelloWord</p>
+            <p style="border:solid blueviolet;">HelloWord</p>
+            <p style="border:solid brown;">HelloWord</p>
+
+            <table>
+                <tr>
+                    <th>HọTên</th>
+                    <th>Ngày Sinh</th>
+                    <th>Giới Tính</th>
+                </tr>
+                <tr>
+                    <td>Nguyễn Minh Anh</td>
+                    <td>03/08/2003</td>
+                    <td>Nữ</td>
+                </tr>
+                <tr>
+                    <td>Lê Văn Tùng</th>
+                    <td>05/08/2000</td>
+                    <td>Nam</td>
+                </tr>
+                <tr>
+                    <td>Thu Trà</td>
+                    <td>24/08/2003</td>
+                    <td>Nữ</td>
+                </tr>
+            </table><br>
+
+            <table border="1">
+                <tr>
+                    <th rowspan="2">STT</th>
+                    <th rowspan="2">Họ Tên</th>
+                    <th colspan="2">Giới Tính</th>
+                    <th rowspan="2">Chức Vụ</th>
+                </tr>
+                <tr>
+                    <th>Nam</th>
+                    <th>Nữ</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Lê Văn Tùng</td>
+                    <td>x</td>
+                    <td></td>
+                    <td>PojectManager</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td></td>
+                    <td>x</td>
+                    <td>MachingLeaing</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Đào Thị Thanh Loan</td>
+                    <td></td>
+                    <td>x</td>
+                    <td>TestTer</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Phạm Yến Thanh</td>
+                    <td>x</td>
+                    <td></td>
+                    <td>Developer</td>
+                </tr>
+            </table><br>
+
+            <table>
+                <tr>
+                <th>STT</th>
+                <th>Họ Tên</th>
+                <th>GVCN</th>
+                <td>Lịch Gặp GVHD</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Lê Văn Tùng</td>
+                    <td rowspan="3">Nguyễn Ngọc Duy</td>
+                    <td rowspan="3">23/02/2022</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Nguyễn Minh Anh</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Phạm Thị Hồng Diễm</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Nguyễn Thị Kim Sa</td>
+                    <td rowspan="2">Vũ Công Thành</td>
+                    <td rowspan="2">10/1/2022</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Phan Văn Thăng</td>
+                </tr>
+            </table><br>
+
+            <table>
+                <tr>
+                    <th colspan="2">Bảng điểm lớp Railway21</th>
+                    <th rowspan="2">Toán</th>
+                    <th rowspan="2">Lý</th>
+                    <th rowspan="2">Hóa</th>
+                </tr>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ Tên</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Trần Đức Anh</td>
+                    <td>8.5</td>
+                    <td>3.0</td>
+                    <td>7.5</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>Nguyễn Minh ANH</td>
+                    <td>8.5</td>
+                    <td>10</td>
+                    <td>9.5</td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>Vương Thị Lê Na</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                </tr>
+
+                <tr>
+                    <td>4</td>
+                    <td>Kiều Thị Thu Hằng</td>
+                    <td>10</td>
+                    <td>9.5</td>
+                    <td>5.75</td>
+                </tr>
+              
+            </table>
+
+            
+</body>
+</bod6>
+</html>
