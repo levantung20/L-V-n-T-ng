@@ -1,0 +1,16 @@
+eclipse.preferences.version=1
+encoding//src/backend/Exceri1.java=UTF-8
+encoding//src/backend/controller/DeMo.java=UTF-8
+encoding//src/backend/controller/DeMoDelete.java=UTF-8
+encoding//src/backend/controller/DeMoInsert.java=UTF-8
+encoding//src/backend/controller/DeMoUpdate.java=UTF-8
+encoding//src/entity/HocSinhGioiHoa.java=UTF-8
+encoding//src/entity/HocSinhGioiVTI.java=UTF-8
+encoding//src/entity/HocSinhYeuVTI.java=UTF-8
+encoding//src/entity/ISinhVat.java=UTF-8
+encoding//src/entity/NhanVienVanPhong.java=UTF-8
+encoding//src/entity/Test.java=UTF-8
+encoding//src/frontend/Demo.java=UTF-8
+encoding//src/frontend/GamMing.java=UTF-8
+encoding//src/frontend/Progame.java=UTF-8
+encoding//src/frontend/Progamming.java=UTF-8
