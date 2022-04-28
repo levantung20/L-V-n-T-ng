@@ -11,7 +11,7 @@
 ```C#
 namespace TNT
 {
-    class ngoctienTNT
+    class TungLeCode
     {
         static void Main(string[] args)
         {
