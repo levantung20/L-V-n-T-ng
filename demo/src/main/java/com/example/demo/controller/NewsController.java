@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.request.CommentRequest;
 import com.example.demo.request.NewsRequest;
 import org.springframework.web.bind.annotation.*;
 
