@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,9 @@ import java.util.Map;
 public class JwtService{
     private static final String KEY = "a-very-secure-server-key-of-phoenix";
 
-    public String generateToken(String email, ERole role) {
+    public String generateToken(String userId, String email, ERole role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         claims.put("email", email);
         claims.put("role", role);
         String token = Jwts.builder()
@@ -25,14 +27,23 @@ public class JwtService{
         return token;
     }
 
-    public String convertToken(String token) {
+    public String parseTokenToRole(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
         System.out.println(claims.get("email").toString());
         System.out.println(claims.get("role").toString());
         return claims.get("role").toString();
-
     }
 
+    public String parseTokenToUserId(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
+                .parseClaimsJws(token).getBody();
+        return claims.get("userId").toString();
+    }
 
+    public String parseTokenToEmail(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
+                .parseClaimsJws(token).getBody();
+        return claims.get("email").toString();
+    }
 }
