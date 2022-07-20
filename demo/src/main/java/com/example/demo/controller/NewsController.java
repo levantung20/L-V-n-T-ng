@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
 import com.example.demo.repository.NewRepository;
