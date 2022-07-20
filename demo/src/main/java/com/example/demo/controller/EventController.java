@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.Event;
 import com.example.demo.repository.EventRepository;
-import com.example.demo.request.CommentRequest;
 import com.example.demo.request.EventRequest;
 import org.springframework.web.bind.annotation.*;
 

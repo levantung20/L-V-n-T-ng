@@ -1,6 +1,6 @@
 package com.example.demo.domain;
 
-import com.example.demo.constant.Role;
+import com.example.demo.constant.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private Role role;
+    private ERole role;
     private String key;
 }
