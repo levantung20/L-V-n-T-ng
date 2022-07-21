@@ -12,6 +12,4 @@ public class UserReponse {
     private String name;
     private String email;
     private ERole erole;
-
-
 }

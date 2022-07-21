@@ -36,7 +36,7 @@ public class TokenController {
         }
         if (!user.get().getPassword().equalsIgnoreCase(loginRequest.getPassword())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password", null));
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password format", null));
         }
         String token = jwtService.generateToken(user.get().getId(), user.get().getEmail(), user.get().getRole());
         UserReponse userReponse = new UserReponse(user.get().getName(), user.get().getEmail(), user.get().getRole());

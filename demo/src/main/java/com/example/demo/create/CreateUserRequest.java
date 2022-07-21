@@ -1,10 +1,9 @@
-package com.example.demo.request;
+package com.example.demo.create;
 
 import com.example.demo.constant.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -13,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+public class CreateUserRequest {
     private String id;
     private String avatar;
     private String name;

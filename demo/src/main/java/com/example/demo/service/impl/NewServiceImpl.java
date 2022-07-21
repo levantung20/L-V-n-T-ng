@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.domain.News;
+import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.NewRepository;
 import com.example.demo.request.NewsRequest;
 import com.example.demo.service.JwtService;
@@ -27,10 +28,10 @@ public class NewServiceImpl implements NewService {
         String userId = jwtService.parseTokenToUserId(token);
         System.out.println(userId);
         News news1 = new News();
-        news1.setUserId(userId);
+        news1.setCreatedDate(new Date().getTime());
+        news1.setCreatedBy(userId);
         news1.setTitle(newsRequest.getTitle());
         news1.setContent(newsRequest.getContent());
-        news1.setLastUpdateTime(new Date().getTime());
         news1.setComments(newsRequest.getComments());
         news1.setHashTags(newsRequest.getHashTags());
         return newRepository.save(news1);
@@ -43,6 +44,10 @@ public class NewServiceImpl implements NewService {
 
     @Override
     public Optional<News> findById(String id) {
-        return newRepository.findById(id);
+        Optional<News> news = newRepository.findById(id);
+        if (news.isEmpty()) {
+            throw new NewsNotFoundException("Can not find news with id = " + id);
+        }
+        return news;
     }
 }

@@ -30,8 +30,6 @@ public class JwtService{
     public String parseTokenToRole(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
-        System.out.println(claims.get("email").toString());
-        System.out.println(claims.get("role").toString());
         return claims.get("role").toString();
     }
 

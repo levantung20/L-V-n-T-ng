@@ -1,21 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.constant.ERole;
+import com.example.demo.create.CreateUserRequest;
 import com.example.demo.domain.User;
-import com.example.demo.request.UserRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "demo/v1/users/")
@@ -28,28 +24,47 @@ public class UserController {
     private static final String KEY = "admin";
 
     @PostMapping()
-    public ResponseEntity<ResponseObject> createUser(@Valid @RequestBody UserRequest userRequest)
+    public ResponseEntity<ResponseObject> createUser(@Valid @RequestBody CreateUserRequest createUserRequest)
             throws Exception {
-        if (userRequest.getKey() == null) {
+        if (createUserRequest.getKey() == null) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                     .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
                             , "Can not creat user without key", null));
 
         }
-        if (!userRequest.getKey().equals(KEY)) {
+        if (!createUserRequest.getKey().equals(KEY)) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                     .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
                             , "Can not creat user without key", null));
         }
         User newUser = new User();
-        newUser.setAvatar(userRequest.getAvatar());
-        newUser.setName(userRequest.getName());
-        newUser.setEmail(userRequest.getEmail());
-        newUser.setPassword(userRequest.getPassword());
+        newUser.setAvatar(createUserRequest.getAvatar());
+        newUser.setName(createUserRequest.getName());
+        newUser.setEmail(createUserRequest.getEmail());
+        newUser.setPassword(createUserRequest.getPassword());
         newUser.setRole(ERole.ADMIN);
         userService.save(newUser);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
                 , "Creat User success", newUser));
     }
+
+    @PostMapping("createUser")
+    public ResponseEntity<ResponseObject> creatRoleUser(@RequestHeader("Authorization") String token,@Valid @RequestBody CreateUserRequest createUserRequest) {
+        String tokens = jwtService.parseTokenToRole(token);
+        if (tokens.equals(ERole.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
+                            , "Role error (only admin can create)", null));
+        }
+        User newUser = new User();
+        newUser.setAvatar(createUserRequest.getAvatar());
+        newUser.setName(createUserRequest.getName());
+        newUser.setEmail(createUserRequest.getEmail());
+        newUser.setPassword(createUserRequest.getPassword());
+        newUser.setRole(ERole.USER);
+        userService.save(newUser);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
+                , "Creat User success", newUser));
     }
+}
 

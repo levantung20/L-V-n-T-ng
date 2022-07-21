@@ -44,12 +44,7 @@ public class NewsController {
 
     @GetMapping("{id}")
     public ResponseEntity<ResponseObject> getDetailNewsById(@PathVariable(name = "id") String id) {
-        Optional<News> news = newService.findById(id);
-        if (news.isPresent()) {
-            return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Get detail news by id" + id, news));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not get news by id", null));
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Get detail news by id" + id, newService.findById(id).get()));
     }
 
     @PutMapping()

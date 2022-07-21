@@ -17,7 +17,9 @@ import java.util.List;
 public class News {
     @Id
     private String id;
-    private String userId;
+    private Long createdDate;
+    private String createdBy;
+    private String updateBy;
     private String title;
     private String content;
     private Long lastUpdateTime;
