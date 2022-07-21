@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
@@ -27,28 +28,18 @@ public class UserController {
     private static final String KEY = "admin";
 
     @PostMapping()
-    public ResponseEntity<ResponseObject> createUser(@RequestBody UserRequest userRequest) throws Exception {
+    public ResponseEntity<ResponseObject> createUser(@Valid @RequestBody UserRequest userRequest)
+            throws Exception {
         if (userRequest.getKey() == null) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat user without key", null));
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
+                            , "Can not creat user without key", null));
 
         }
         if (!userRequest.getKey().equals(KEY)) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat user without key", null));
-        }
-        if (userService.checkEmail(userRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Email does exit", null));
-        }
-        if (!userRequest.getEmail().substring(userRequest.getEmail().indexOf('@')).contains("ntq-solution.com.vn")){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong email format", null));
-        }
-
-        if (!userService.isValidPassword(userRequest.getPassword())){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password format", null));
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
+                            , "Can not creat user without key", null));
         }
         User newUser = new User();
         newUser.setAvatar(userRequest.getAvatar());
@@ -57,7 +48,8 @@ public class UserController {
         newUser.setPassword(userRequest.getPassword());
         newUser.setRole(ERole.ADMIN);
         userService.save(newUser);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat User success", newUser));
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
+                , "Creat User success", newUser));
     }
     }
 
