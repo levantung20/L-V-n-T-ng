@@ -37,7 +37,7 @@ public class UserController {
                 newUser.setAvatar(userRequest.getAvatar());
                 newUser.setName(userRequest.getName());
                 newUser.setEmail(userRequest.getEmail());
-                newUser.setPassword(newUser.getPassword());
+                newUser.setPassword(userRequest.getPassword());
                 newUser.setRole(ERole.ADMIN);
                 userService.save(newUser);
                 return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat User success", newUser));
