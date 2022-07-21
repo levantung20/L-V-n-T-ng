@@ -15,14 +15,7 @@ public class UserServiceImpl implements UserService {
     public final UserRepository userRepository;
 
     @Override
-    public User save(UserRequest userRequest) {
-        User newUser = new User();
-        newUser.setAvatar(userRequest.getAvatar());
-        newUser.setName(userRequest.getName());
-        newUser.setEmail(userRequest.getEmail());
-        newUser.setPassword(userRequest.getPassword());
-        newUser.setRole(ERole.ADMIN);
-        userRepository.save(newUser);
-        return userRepository.save(newUser);
+    public User save(User User) {
+        return userRepository.save(User);
     }
 }

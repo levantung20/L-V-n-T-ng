@@ -38,7 +38,7 @@ public class EventController {
     }
 
     @PostMapping("{id}/comment")
-    public String createCommentForEvent(@PathVariable("id") String id, @RequestBody CommentRequest commentRequest) {
+    public <CommentRequest> String createCommentForEvent(@PathVariable("id") String id, @RequestBody CommentRequest commentRequest) {
         return "Create new comment";
     }
 }

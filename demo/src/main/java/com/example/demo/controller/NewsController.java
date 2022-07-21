@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
+import com.example.demo.request.CommentRequest;
 import com.example.demo.request.NewsRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;

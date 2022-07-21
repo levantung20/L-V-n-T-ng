@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.constant.ERole;
 import com.example.demo.domain.User;
 import com.example.demo.request.UserRequest;
 import com.example.demo.response.ResponseObject;
@@ -32,11 +33,17 @@ public class UserController {
                 throw new Exception("PERMISSION DENIED");
             }
             if (userRequest.getKey().equals(KEY)) {
-                User newUser = userService.save(userRequest);
+               User newUser = new User();
+                newUser.setAvatar(userRequest.getAvatar());
+                newUser.setName(userRequest.getName());
+                newUser.setEmail(userRequest.getEmail());
+                newUser.setPassword(newUser.getPassword());
+                newUser.setRole(ERole.ADMIN);
+                userService.save(newUser);
                 return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat User success", newUser));
             }
         }
-        User newUser = userService.save(userRequest);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat User with not key", newUser));
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat user without key", null));
     }
 }
