@@ -28,22 +28,36 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<ResponseObject> createUser(@RequestBody UserRequest userRequest) throws Exception {
-        if (userRequest.getKey() != null) {
-            if (!Objects.equals(KEY, userRequest.getKey())) {
-                throw new Exception("PERMISSION DENIED");
-            }
-            if (userRequest.getKey().equals(KEY)) {
-               User newUser = new User();
-                newUser.setAvatar(userRequest.getAvatar());
-                newUser.setName(userRequest.getName());
-                newUser.setEmail(userRequest.getEmail());
-                newUser.setPassword(newUser.getPassword());
-                newUser.setRole(ERole.ADMIN);
-                userService.save(newUser);
-                return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat User success", newUser));
-            }
+        if (userRequest.getKey() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat user without key", null));
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat user without key", null));
+        if (!userRequest.getKey().equals(KEY)) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat user without key", null));
+        }
+        if (userService.checkEmail(userRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Email does exit", null));
+        }
+        if (!userRequest.getEmail().substring(userRequest.getEmail().indexOf('@')).contains("ntq-solution.com.vn")){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong email format", null));
+        }
+
+        if (!userService.isValidPassword(userRequest.getPassword())){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password format", null));
+        }
+        User newUser = new User();
+        newUser.setAvatar(userRequest.getAvatar());
+        newUser.setName(userRequest.getName());
+        newUser.setEmail(userRequest.getEmail());
+        newUser.setPassword(userRequest.getPassword());
+        newUser.setRole(ERole.ADMIN);
+        userService.save(newUser);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat User success", newUser));
     }
-}
+
+    }
+
