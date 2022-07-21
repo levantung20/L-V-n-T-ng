@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 
 
 public interface UserService {
-    User save(UserRequest userRequest);
+    User save(User user);
 
 }
