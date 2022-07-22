@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
 import com.example.demo.request.CommentRequest;
-import com.example.demo.request.NewsRequest;
+import com.example.demo.request.CreateNewsRequest;
+import com.example.demo.request.UpdateNewsRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewService;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -26,14 +27,8 @@ public class NewsController {
     public final NewService newService;
 
     @PostMapping()
-    private ResponseEntity<ResponseObject> createNews(@RequestHeader("Authorization") String token, @RequestBody NewsRequest newsRequest) {
-        ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
-        if (eRole.equals(ERole.ADMIN)) {
-            News news = newService.save(token, newsRequest);
-            return ResponseEntity.ok(new ResponseObject(HttpStatus.CREATED.value(), "Creat news success", news));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat news", null));
+    private ResponseEntity<ResponseObject> createNews(@RequestHeader("Authorization") String token, @Valid @RequestBody CreateNewsRequest createNewsRequest) {
+            return ResponseEntity.ok(new ResponseObject(HttpStatus.CREATED.value(), "Creat news success", newService.insert(createNewsRequest, token)));
     }
 
     @GetMapping()
@@ -52,18 +47,9 @@ public class NewsController {
                 .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not get news by id", null));
     }
 
-    @PutMapping()
-    public ResponseEntity<ResponseObject> updateNews(@RequestHeader("Authorization") String token, @RequestBody NewsRequest newsRequest) {
-        Optional<News> news = newService.findById(newsRequest.getId());
-        if (news.isPresent()) {
-            ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
-            if (eRole.equals(ERole.ADMIN)) {
-                News news1 = newService.save(token, newsRequest);
-                return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Update success", news1));
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Update not success", null));
+    @PutMapping("{id}")
+    public ResponseEntity<ResponseObject> updateNews(@PathVariable(name = "id") String id, @RequestHeader("Authorization") String token, @RequestBody UpdateNewsRequest updateNewsRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "Update successfully", newService.save(id, updateNewsRequest, token)));
     }
 
     @PostMapping("{id}/comment")
@@ -71,4 +57,15 @@ public class NewsController {
         return "Create new comment";
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<ResponseObject> deleteNews(@PathVariable(name = "id") String id, @RequestHeader("Authorization") String token) {
+        String createUserIdCheck = jwtService.parseTokenToUserId(token);
+        Optional<News> newsToDelete = newService.findById(id);
+        if (!createUserIdCheck.equals(newsToDelete.get().getCreateUserId())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseObject(HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED TO DELETE NEWS", null));
+        }
+        newService.deleteNewsById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "DELETE SUCCESSFULLY!", null));
+    }
 }

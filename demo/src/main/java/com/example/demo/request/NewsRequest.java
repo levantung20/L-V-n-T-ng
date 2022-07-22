@@ -14,9 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 public class NewsRequest {
     private String id;
-    private String userId;
+    //TODO change UserID to createUserID
+    private String createUserID;
+    //TODO add update
+    private String updateUserID;
     private String title;
     private String content;
+    //TODO add createTime
+    private Long createTime;
     private Long lastUpdateTime;
     private List<HashTag> hashTags;
     private List<Comment> comments;
