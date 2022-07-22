@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
 import com.example.demo.request.CommentRequest;
-import com.example.demo.request.NewsRequest;
+import com.example.demo.request.create.CreateNewsRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewService;
@@ -17,52 +17,64 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("demo/v1/news/")
-@RequiredArgsConstructor
 public class NewsController {
 
     @Autowired
     private JwtService jwtService;
-
-    public final NewService newService;
+    @Autowired
+    public NewService newService;
 
     @PostMapping()
-    private ResponseEntity<ResponseObject> createNews(@RequestHeader("Authorization") String token, @RequestBody NewsRequest newsRequest) {
+    private ResponseEntity<ResponseObject> createNews(@RequestHeader("Authorization") String token
+            , @RequestBody CreateNewsRequest createNewsRequest) {
         ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
         if (eRole.equals(ERole.ADMIN)) {
-            News news = newService.save(token, newsRequest);
-            return ResponseEntity.ok(new ResponseObject(HttpStatus.CREATED.value(), "Creat news success", news));
+            News news = newService.save(token, createNewsRequest);
+            return ResponseEntity.ok(new ResponseObject(HttpStatus.CREATED.value()
+                    , "Creat news success", news));
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Can not creat news", null));
+                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
+                        , "Can not creat news", null));
     }
 
     @GetMapping()
-    public ResponseEntity<?> getNewsAll() {
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Creat news success", newService.findAll()));
+    public ResponseEntity<?> getNewsAll(@RequestParam(required = false) String hashTag, @RequestParam Integer page
+            , @RequestParam Integer pageSize) {
+        if (hashTag == null)
+            return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
+                    , "Creat news success", newService.findAll(page, pageSize)));
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
+                , "Creat news success", newService.findByHashTags(hashTag, page, pageSize)));
     }
 
 
     @GetMapping("{id}")
     public ResponseEntity<ResponseObject> getDetailNewsById(@PathVariable(name = "id") String id) {
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Get detail news by id" + id, newService.findById(id).get()));
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
+                , "Get detail news by id" + id, newService.findById(id).get()));
     }
 
     @PutMapping()
-    public ResponseEntity<ResponseObject> updateNews(@RequestHeader("Authorization") String token, @RequestBody NewsRequest newsRequest) {
-        Optional<News> news = newService.findById(newsRequest.getId());
+    public ResponseEntity<ResponseObject> updateNews(@RequestHeader("Authorization") String token
+            , @RequestBody CreateNewsRequest createNewsRequest) {
+        Optional<News> news = newService.findById(createNewsRequest.getId());
         if (news.isPresent()) {
             ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
             if (eRole.equals(ERole.ADMIN)) {
-                News news1 = newService.save(token, newsRequest);
-                return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Update success", news1));
+                News news1 = newService.save(token, createNewsRequest);
+                return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
+                        , "Update success", news1));
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "Update not success", null));
+                .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
+                        , "Update not success", null));
     }
 
     @PostMapping("{id}/comment")
-    public String createCommentForNews(@PathVariable("id") String id, @RequestBody CommentRequest commentRequest) {
+    public String createCommentForNews(@PathVariable("id") String id
+            , @RequestBody CommentRequest commentRequest) {
         return "Create new comment";
     }
 

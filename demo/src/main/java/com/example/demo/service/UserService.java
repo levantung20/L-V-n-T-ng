@@ -5,8 +5,4 @@ import com.example.demo.domain.User;
 
 public interface UserService {
     User save(User user);
-
-
-
-
 }

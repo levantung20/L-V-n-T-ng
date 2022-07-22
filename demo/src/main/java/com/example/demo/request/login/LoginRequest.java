@@ -1,6 +1,5 @@
-package com.example.demo.create;
+package com.example.demo.request.login;
 
-import com.example.demo.constant.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,15 +11,11 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserRequest {
-    private String id;
-    private String avatar;
-    private String name;
-    @Email(regexp = ".+@ntq-solution.com.vn",message = "Email must end with @ntq-solution.com.vn")
+public class LoginRequest {
+    @Email(regexp = ".+@ntq-solution.com.vn")
     private String email;
-    @Size(min = 8, max = 20,message = " ")
+    @Size(min = 8, max = 20,message = "Password must be great than 8 char")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",message = "Password not valid")
     private String password;
-    private ERole role;
-    private String key;
+
 }
