@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NewRepository extends MongoRepository<News, String> {
-    List<News> findByHashTags(String hashTag);
+    List<News> findByHashTag(String hashTag);
+
 }

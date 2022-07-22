@@ -54,7 +54,7 @@ public class NewServiceImpl implements NewService {
 
     @Override
     public List<News> findByHashTags(String hashTag, Integer page, Integer pageSize) {
-        List<News> news = newRepository.findByHashTags(hashTag).stream()
+        List<News> news = newRepository.findByHashTag(hashTag).stream()
                 .skip((page - 1) * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
