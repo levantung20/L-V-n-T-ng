@@ -2,18 +2,18 @@ package com.example.demo.service.impl;
 
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
+import com.example.demo.dto.NewsDTO;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.exception.UserTypeNotAllow;
 import com.example.demo.repository.NewRepository;
-import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.request.create.CreateNewsRequest;
+import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,17 +39,11 @@ public class NewServiceImpl implements NewService {
         }
         String updateBy = jwtService.parseTokenToUserId(token);
         News news1 = news.get();
-        convertNewsRequestToNews(updateNewsRequest, news1);
+        NewsDTO.convertNewsRequestToNews1(updateNewsRequest, news1);
         news1.setUpdateUserId(updateBy);
         return newRepository.save(news1);
     }
 
-    private void convertNewsRequestToNews(UpdateNewsRequest updateNewsRequest, News news) {
-        news.setContent(updateNewsRequest.getContent());
-        news.setTitle(updateNewsRequest.getTitle());
-        news.setLastUpdateTime(new Date().getTime());
-        news.setHashTags(updateNewsRequest.getHashTags());
-    }
 
     @Override
     public News insert(CreateNewsRequest createNewsRequest, String token) {
@@ -57,17 +51,7 @@ public class NewServiceImpl implements NewService {
         if (!role.equals(ERole.ADMIN.name())) {
             throw new UserTypeNotAllow("can't create news with role = " + role);
         }
-        return newRepository.insert(convertNewsRequestToNews(createNewsRequest, token));
-    }
-
-    private News convertNewsRequestToNews(CreateNewsRequest createNewsRequest, String token) {
-        News news = new News();
-        news.setCreateUserId(jwtService.parseTokenToUserId(token));
-        news.setContent(createNewsRequest.getContent());
-        news.setTitle(createNewsRequest.getTitle());
-        news.setCreateTime(new Date().getTime());
-        news.setHashTags(createNewsRequest.getHashTags());
-        return news;
+        return newRepository.insert(NewsDTO.convertNewsRequestToNews(createNewsRequest, token));
     }
 
     @Override
@@ -76,20 +60,17 @@ public class NewServiceImpl implements NewService {
     }
 
     @Override
-    public Optional<News> findById(String id) {
+    public News findById(String id) {
         Optional<News> news = newRepository.findById(id);
         if (news.isEmpty()) {
             throw new com.example.demo.exception.NewsNotFoundException("Can not find news with id = " + id);
         }
-        return news;
+        return news.get();
     }
 
     @Override
     public List<News> findByHashTag(String hashTags, Integer page, Integer pageSize) {
-        List<News> news = newRepository.findByHashTags(hashTags).stream()
-                .skip((page - 1) * pageSize)
-                .limit(pageSize)
-                .collect(Collectors.toList());
+        List<News> news = newRepository.findByHashTags(hashTags).stream().skip((page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
         if (news.isEmpty()) {
             throw new com.example.demo.exception.NewsNotFoundException("Can not find news with hashTag = " + hashTags);
         }
@@ -98,9 +79,9 @@ public class NewServiceImpl implements NewService {
 
     @Override
     public void deleteNewsById(String id) {
-        Optional<News> deleteNews = findById(id);
-        if (deleteNews.isPresent()) {
-            newRepository.deleteById(id);
-        }
+        News deleteNews = findById(id);
+        newRepository.deleteById(id);
     }
+
 }
+

@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.News;
-import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.request.create.CreateNewsRequest;
+import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewService;
@@ -30,38 +30,46 @@ public class NewsController {
                 , "Creat news success", newService.insert(createNewsRequest, token)));
     }
 
+
     @GetMapping()
-    public ResponseEntity<?> getNewsAll(@RequestParam(required = false) String hashTags, @RequestParam Integer page
-            , @RequestParam Integer pageSize) {
+    public ResponseEntity<?> getNewsAll(@RequestParam String hashTags, Integer page, Integer pageSize) {
         if (hashTags == null)
             return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
                     , "Creat news success", newService.findAll(page, pageSize)));
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
                 , "Creat news success", newService.findByHashTag(hashTags, page, pageSize)));
+
     }
 
 
     @GetMapping("{id}")
     public ResponseEntity<ResponseObject> getDetailNewsById(@PathVariable(name = "id") String id) {
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
-                , "Get detail news by id" + id, newService.findById(id).get()));
+                , "Get detail news by id" + id, newService.findById(id)));
     }
 
+
     @PutMapping("{id}")
-    public ResponseEntity<ResponseObject> updateNews(@PathVariable(name = "id") String id, @RequestHeader("Authorization") String token, @RequestBody UpdateNewsRequest updateNewsRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "Update successfully", newService.save(id, updateNewsRequest, token)));
+    public ResponseEntity<ResponseObject> updateNews(@PathVariable(name = "id") String id
+            , @RequestHeader("Authorization") String token
+            , @RequestBody UpdateNewsRequest updateNewsRequest) {
+        News news = newService.save(id, updateNewsRequest, token);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseObject(HttpStatus.OK.value()
+                        , "Update successfully"
+                        , news));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<ResponseObject> deleteNews(@PathVariable(name = "id") String id, @RequestHeader("Authorization") String token) {
         String createUserIdCheck = jwtService.parseTokenToUserId(token);
-        Optional<News> newsToDelete = newService.findById(id);
-        if (!createUserIdCheck.equals(newsToDelete.get().getCreateUserId())) {
+       News newsToDelete = newService.findById(id);
+        if (!createUserIdCheck.equals(newsToDelete.getCreateUserId())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ResponseObject(HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED TO DELETE NEWS", null));
         }
         newService.deleteNewsById(id);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "DELETE SUCCESSFULLY!", null));
-    }
 
+    }
 }

@@ -59,6 +59,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectId" id="2CHXO1T1HZfxofzHdQuCc6ESWOp" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -80,6 +83,7 @@
 }]]></component>
   <component name="RunManager">
     <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ACTIVE_PROFILES" />
       <module name="demo" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.DemoApplication" />
       <method v="2">
@@ -98,7 +102,7 @@
       <workItem from="1658460448698" duration="3444000" />
       <workItem from="1658465600299" duration="560000" />
       <workItem from="1658471325698" duration="3026000" />
-      <workItem from="1658474703275" duration="5678000" />
+      <workItem from="1658474703275" duration="6961000" />
     </task>
     <servers />
   </component>

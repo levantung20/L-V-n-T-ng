@@ -7,9 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -29,6 +27,5 @@ public class News {
     private  long createTime;
     private Long lastUpdateTime;
     private String hashTags;
-    private List<Comment> comments;;
 
 }
