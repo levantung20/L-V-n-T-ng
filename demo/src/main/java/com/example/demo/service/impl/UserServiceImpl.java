@@ -9,6 +9,10 @@ import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -17,5 +21,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User User) {
         return userRepository.save(User);
+    }
+
+    @Override
+    public Boolean isValidPassword(String password) {
+        String regex = "^(?=.*[0-9])"
+                + "(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+        Pattern p = Pattern.compile(regex);
+        if (password == null){
+            return false;
+        }
+        Matcher m = p.matcher(password);
+        return m.matches();
+    }
+
+    @Override
+    public Boolean checkEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()){
+            return true;
+        }
+        return false;
     }
 }
