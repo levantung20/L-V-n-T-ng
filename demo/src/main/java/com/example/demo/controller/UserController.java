@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.constant.ERole;
-import com.example.demo.create.CreateUserRequest;
+import com.example.demo.request.create.CreateUserRequest;
 import com.example.demo.domain.User;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;

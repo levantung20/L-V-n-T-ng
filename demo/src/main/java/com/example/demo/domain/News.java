@@ -23,7 +23,7 @@ public class News {
     private String title;
     private String content;
     private Long lastUpdateTime;
-    private List<HashTag> hashTags;
+    private String hashTags;
     private List<Comment> comments;
 
 }

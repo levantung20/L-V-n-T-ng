@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.request.LoginRequest;
+import com.example.demo.request.login.LoginRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.response.UserReponse;
 import com.example.demo.service.JwtService;
