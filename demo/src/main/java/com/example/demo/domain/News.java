@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +18,15 @@ import java.util.List;
 public class News {
     @Id
     private String id;
-    private String userId;
+    //TODO change UserID To createUserID
+    private String createUserId;
+    //TODO add updateUserID
+    private String updateUserId;
+    @Size(max = 200, message = "Title's Characters is less than 200")
     private String title;
     private String content;
+    //TODO add createTime
+    private  long createTime;
     private Long lastUpdateTime;
     private List<HashTag> hashTags;
     private List<Comment> comments;
