@@ -1,8 +1,11 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
-import com.example.demo.domain.exception.NewsNotFoundException;
+import com.example.demo.exception.NewsNotFoundException;
+import com.example.demo.exception.UserTypeNotAllow;
 import com.example.demo.repository.NewRepository;
+import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.request.create.CreateNewsRequest;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewService;
@@ -22,20 +25,49 @@ public class NewServiceImpl implements NewService {
     private JwtService jwtService;
 
     @Autowired
-    public  NewRepository newRepository;
+    public NewRepository newRepository;
 
     @Override
-    public News save(String token, CreateNewsRequest createNewsRequest) {
-        String userId = jwtService.parseTokenToUserId(token);
-        System.out.println(userId);
-        News news1 = new News();
-        news1.setCreatedDate(new Date().getTime());
-        news1.setCreatedBy(userId);
-        news1.setTitle(createNewsRequest.getTitle());
-        news1.setContent(createNewsRequest.getContent());
-        news1.setComments(createNewsRequest.getComments());
-        news1.setHashTags(createNewsRequest.getHashTags());
+    public News save(String id, UpdateNewsRequest updateNewsRequest, String token) {
+        Optional<News> news = newRepository.findById(id);
+        if (news.isEmpty()) {
+            throw new NewsNotFoundException("Can't find news with id = " + updateNewsRequest.getId());
+        }
+        ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
+        if (!eRole.equals(ERole.ADMIN)) {
+            throw new UserTypeNotAllow("can't not update news with role equal user");
+        }
+        String updateBy = jwtService.parseTokenToUserId(token);
+        News news1 = news.get();
+        convertNewsRequestToNews(updateNewsRequest, news1);
+        news1.setUpdateUserId(updateBy);
         return newRepository.save(news1);
+    }
+
+    private void convertNewsRequestToNews(UpdateNewsRequest updateNewsRequest, News news) {
+        news.setContent(updateNewsRequest.getContent());
+        news.setTitle(updateNewsRequest.getTitle());
+        news.setLastUpdateTime(new Date().getTime());
+        news.setHashTags(updateNewsRequest.getHashTags());
+    }
+
+    @Override
+    public News insert(CreateNewsRequest createNewsRequest, String token) {
+        String role = jwtService.parseTokenToRole(token);
+        if (!role.equals(ERole.ADMIN.name())) {
+            throw new UserTypeNotAllow("can't create news with role = " + role);
+        }
+        return newRepository.insert(convertNewsRequestToNews(createNewsRequest, token));
+    }
+
+    private News convertNewsRequestToNews(CreateNewsRequest createNewsRequest, String token) {
+        News news = new News();
+        news.setCreateUserId(jwtService.parseTokenToUserId(token));
+        news.setContent(createNewsRequest.getContent());
+        news.setTitle(createNewsRequest.getTitle());
+        news.setCreateTime(new Date().getTime());
+        news.setHashTags(createNewsRequest.getHashTags());
+        return news;
     }
 
     @Override
@@ -47,20 +79,28 @@ public class NewServiceImpl implements NewService {
     public Optional<News> findById(String id) {
         Optional<News> news = newRepository.findById(id);
         if (news.isEmpty()) {
-            throw new NewsNotFoundException("Can not find news with id = " + id);
+            throw new com.example.demo.exception.NewsNotFoundException("Can not find news with id = " + id);
         }
         return news;
     }
 
     @Override
-    public List<News> findByHashTags(String hashTag, Integer page, Integer pageSize) {
-        List<News> news = newRepository.findByHashTag(hashTag).stream()
+    public List<News> findByHashTag(String hashTags, Integer page, Integer pageSize) {
+        List<News> news = newRepository.findByHashTags(hashTags).stream()
                 .skip((page - 1) * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
         if (news.isEmpty()) {
-            throw new NewsNotFoundException("Can not find news with hashTag = " + hashTag);
+            throw new com.example.demo.exception.NewsNotFoundException("Can not find news with hashTag = " + hashTags);
         }
         return news;
+    }
+
+    @Override
+    public void deleteNewsById(String id) {
+        Optional<News> deleteNews = findById(id);
+        if (deleteNews.isPresent()) {
+            newRepository.deleteById(id);
+        }
     }
 }

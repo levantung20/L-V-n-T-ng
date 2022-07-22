@@ -8,25 +8,38 @@
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_configuration_commons_configuration_1_9.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_6.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/create/CreateNewsRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/demo/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/create/CreateUserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/create/CreateUserRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/NewsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/NewsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/domain/News.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/domain/News.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/NewsNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/domain/exception/NewsNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/handler/NewsNotFoundExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/domain/exception/handler/NewsNotFoundExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/domain/exception/NewsNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/domain/exception/handler/NewsNotFoundExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/NewsNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/NewsNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/UserTypeNotAllow.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/UserTypeNotAllow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/handler/NewsNotFoundExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/exception/handler/NewsNotFoundExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/repository/NewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/repository/NewRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/login/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/CreateNewsRequest.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/NewsRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/UpdateNewsRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/UserRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/create/CreateNewsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/request/create/CreateNewsRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/NewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/NewService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/impl/NewServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/impl/NewServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -85,7 +98,7 @@
       <workItem from="1658460448698" duration="3444000" />
       <workItem from="1658465600299" duration="560000" />
       <workItem from="1658471325698" duration="3026000" />
-      <workItem from="1658474703275" duration="1310000" />
+      <workItem from="1658474703275" duration="5678000" />
     </task>
     <servers />
   </component>

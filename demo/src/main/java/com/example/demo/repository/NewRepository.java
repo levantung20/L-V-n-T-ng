@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface NewRepository extends MongoRepository<News, String> {
-    List<News> findByHashTag(String hashTag);
+    List<News> findByHashTags(String hashTags);
 
 }
