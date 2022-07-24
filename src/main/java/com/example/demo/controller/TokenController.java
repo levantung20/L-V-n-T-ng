@@ -39,7 +39,7 @@ public class TokenController {
                     .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password format", null));
         }
         String token = jwtService.generateToken(user.get().getId(), user.get().getEmail(), user.get().getRole());
-        UserReponse userReponse = new UserReponse(user.get().getName(), user.get().getEmail(), user.get().getRole());
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), token, userReponse));
+        UserReponse userReponse = new UserReponse(user.get().getName(), user.get().getEmail(), user.get().getRole(), token);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Login success", userReponse));
     }
 }

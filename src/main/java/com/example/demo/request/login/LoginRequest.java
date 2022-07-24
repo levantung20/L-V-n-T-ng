@@ -17,5 +17,4 @@ public class LoginRequest {
     @Size(min = 8, max = 20,message = "Password must be great than 8 char")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",message = "Password not valid")
     private String password;
-
 }
