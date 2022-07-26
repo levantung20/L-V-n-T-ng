@@ -8,6 +8,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Document
@@ -28,7 +33,7 @@ public class Event {
 
     private String content;
 
-    private StatusEvent status;
+    private StatusEvent statusEvent;
 
     private String timeBegin;
 
@@ -37,4 +42,8 @@ public class Event {
     private Long createTime;
 
     private Long updateTime;
+
+    private List<Comment> comments = new ArrayList<>();
+
+
 }

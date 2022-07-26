@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -18,14 +21,19 @@ public class News {
     private String id;
     //TODO change UserID To createUserID
     private String createUserId;
+
+    private String banner;
     //TODO add updateUserID
     private String updateUserId;
     @Size(max = 200, message = "Title's Characters is less than 200")
     private String title;
     private String content;
-    //TODO add createTime
-    private  long createTime;
-    private Long lastUpdateTime;
-    private String hashTags;
+
+    private Long createdDate;
+    private Long lastUpdatedDate;
+    private String hashTag;
+
+    @DBRef
+    private List<Comment> comments = new ArrayList<>();
 
 }

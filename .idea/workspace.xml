@@ -4,7 +4,6 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f579b069-3028-4e87-962c-b7fe515e0a46" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +14,7 @@
       <list>
         <option value="Enum" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -64,7 +64,6 @@
     &quot;spring.configuration.checksum&quot;: &quot;c166f11c05ce5c4c9b849183d8f399e5&quot;
   }
 }</component>
-  <component name="RunManager">
     <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="ACTIVE_PROFILES" />
       <module name="ProjectFresherTeam2" />
@@ -73,7 +72,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-  </component>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Event" />
+      </list>
+    </recent_temporary>
+  </project>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -88,7 +92,13 @@
       <workItem from="1658474703275" duration="6961000" />
       <workItem from="1658656728257" duration="556000" />
       <workItem from="1658657371133" duration="412000" />
-      <workItem from="1658669371526" duration="3463000" />
+      <workItem from="1658669371526" duration="9915000" />
+      <workItem from="1658712367900" duration="7619000" />
+      <workItem from="1658732904048" duration="10850000" />
+      <workItem from="1658753948960" duration="11389000" />
+      <workItem from="1658791896217" duration="713000" />
+      <workItem from="1658798073280" duration="7355000" />
+      <workItem from="1658805515464" duration="2712000" />
     </task>
     <servers />
   </component>
@@ -111,13 +121,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/impl/EventServiceImpl.java</url>
-          <line>25</line>
+          <line>34</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/dto/EventDto.java</url>
-          <line>29</line>
+          <line>32</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/impl/NewsServiceImpl.java</url>
+          <line>190</line>
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
