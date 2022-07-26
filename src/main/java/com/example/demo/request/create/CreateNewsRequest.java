@@ -13,9 +13,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class CreateNewsRequest {
 
-
     private String id;
 
+    //TODO change UserID to createUserID
     private String createUserId;
 
     @Size(max = 200, message = "Title's Characters is less than 200")
@@ -23,10 +23,6 @@ public class CreateNewsRequest {
     @NotBlank(message = "Title must not be null")
     @NotEmpty(message = "Title must not be null")
     private String title;
-
     private String content;
-
-    private long createTime;
-
     private String hashTags;
 }

@@ -26,7 +26,7 @@ public class UpdateNewsRequest {
 
     private String hashTags;
     //TODO add update
-    private String updateUserID;
+    private String updateUserId;
 
     private long lastUpdateTime;
 }
