@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class CreateNewsRequest {
 
-
     private String id;
 
     //TODO change UserID to createUserID
@@ -24,10 +23,6 @@ public class CreateNewsRequest {
     @NotBlank(message = "Title must not be null")
     @NotEmpty(message = "Title must not be null")
     private String title;
-
     private String content;
-    //TODO add createTime
-    private long createTime;
-
     private String hashTags;
 }
