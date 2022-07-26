@@ -1,7 +1,6 @@
 package com.example.demo.request.create;
 
 import com.example.demo.constant.StatusEvent;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,15 +24,7 @@ public class CreateEventRequest {
 
     private StatusEvent status;
 
-    @JsonFormat(pattern="dd-MM-yyyy hh:mm:ss")
-    @NotBlank(message = "Time begin must not be blank")
     private String timeBegin;
 
-    @JsonFormat(pattern="dd-MM-yyyy hh:mm:ss")
-    @NotBlank(message = "Time end must not be blank")
     private String timeEnd;
-
-    private String startTime;
-
-
 }

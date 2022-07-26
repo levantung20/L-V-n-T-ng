@@ -6,24 +6,25 @@ import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class NewsDTO {
+import java.util.Date;
 
-    public static News convertNewsRequestToNews(CreateNewsRequest request) {
+public class NewsDTO {
+    private static JwtService jwtService = new JwtService();
+    public static News convertNewsRequestToNews(CreateNewsRequest createNewsRequest, String token) {
         News news = new News();
-        news.setCreateUserId(request.getCreateUserId());
-        news.setContent(request.getContent());
-        news.setTitle(request.getTitle());
-        news.setCreatedDate(System.currentTimeMillis());
-        news.setLastUpdatedDate(System.currentTimeMillis());
-        news.setHashTag(request.getHashTags());
+        news.setCreateUserId(jwtService.parseTokenToUserId(token));
+        news.setContent(createNewsRequest.getContent());
+        news.setTitle(createNewsRequest.getTitle());
+        news.setCreateTime(new Date().getTime());
+        news.setHashTags(createNewsRequest.getHashTags());
         return news;
     }
 
-    public static News convertNewsRequestToNews1(UpdateNewsRequest request, News news) {
-        news.setContent(request.getContent());
-        news.setTitle(request.getTitle());
-        news.setLastUpdatedDate(System.currentTimeMillis());
-        news.setHashTag(request.getHashTags());
+    public static News convertNewsRequestToNews1(UpdateNewsRequest updateNewsRequest, News news) {
+        news.setContent(updateNewsRequest.getContent());
+        news.setTitle(updateNewsRequest.getTitle());
+        news.setLastUpdateTime(new Date().getTime());
+        news.setHashTags(updateNewsRequest.getHashTags());
         return news;
     }
 }

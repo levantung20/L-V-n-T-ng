@@ -1,7 +1,7 @@
 package com.example.demo.constant;
 
 public enum StatusEvent {
-    INCOMING,
+    UPCOMING,
     HAPPENNING,
     FINISHED;
 }

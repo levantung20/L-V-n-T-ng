@@ -1,23 +1,17 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.constant.ERole;
-import com.example.demo.domain.Comment;
 import com.example.demo.domain.Event;
 import com.example.demo.dto.EventDto;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.UserTypeNotAllow;
-import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.EventRepository;
-import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
 import com.example.demo.service.EventService;
 import com.example.demo.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -26,9 +20,6 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     public EventRepository eventRepository;
-
-    @Autowired
-    public CommentRepository commentRepository;
 
     @Override
     public Event insert(CreateEventRequest createEventRequest, String token) {
@@ -79,47 +70,5 @@ public class EventServiceImpl implements EventService {
         }
         eventRepository.deleteById(eventId);
     }
-
-    @Override
-    public Event addCommentToEvent(String eventId, String token, CreateCommentRequest createCommentRequest) {
-        Event event = eventRepository.findById(eventId).get();
-        if (event == null) {
-            throw new EventNotFoundException("EventId does not exit");
-        }
-        String userId = jwtService.parseTokenToUserId(token);
-        Comment comment = new Comment();
-        comment.setEntityId(eventId);
-        comment.setUserId(userId);
-        comment.setContent(createCommentRequest.getContent());
-        comment.setCreatedDate(System.currentTimeMillis());
-        commentRepository.save(comment);
-        event.getComments().add(comment);
-        return eventRepository.save(event);
-    }
-
-    @Override
-    public List<Event> getListEventByStatusEvent(String statusEvent, Integer page, Integer pageSize) {
-        List<Event> events = eventRepository.findEventByStatusEvent(statusEvent).stream().skip((page - 1) * pageSize)
-                .limit(pageSize).collect(Collectors.toList());
-        if (events.isEmpty()) {
-            throw new EventNotFoundException("Status Event does not exist");
-        }
-        return events;
-    }
-
-    @Override
-    public void deleteComment(String eventId, String token) {
-        Event event = eventRepository.findById(eventId).get();
-        if (event == null) {
-            throw new EventNotFoundException("EventId does not exist");
-        }
-        String userId = jwtService.parseTokenToUserId(token);
-        if (!event.getCreateUserId().equals(userId)) {
-            throw new EventNotFoundException("Unauthorized to delete comment");
-        }
-        eventRepository.deleteById(eventId);
-    }
-
-
 
 }

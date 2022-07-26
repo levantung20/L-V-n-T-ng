@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Event;
-import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
 import com.example.demo.response.ResponseObject;
@@ -52,29 +51,5 @@ public class EventController {
         eventService.deleteEventById(eventId, token);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Delete Event Success", null));
-    }
-
-    @PostMapping("/{eventId}/comments")
-    public ResponseEntity<ResponseObject> addCommentToEvent(@PathVariable(name = "eventId") String eventId,
-                                                            @RequestHeader("Authorization") String token,
-                                                            @RequestBody CreateCommentRequest createCommentRequest) {
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Comment to Event Success", eventService.addCommentToEvent(eventId, token, createCommentRequest)));
-    }
-
-    @GetMapping("statusEvent")
-    public ResponseEntity<ResponseObject> getListEventByStatusEvent(@RequestParam(name = "statusEvent") String statusEvent,
-                                                                    Integer page, Integer pageSize) {
-        eventService.getListEventByStatusEvent(statusEvent, page, pageSize);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Get list event by status event success", null));
-    }
-
-    @DeleteMapping("/{eventId}/comments")
-    public ResponseEntity<ResponseObject> deleteComment(@PathVariable(name = "eventId") String eventId,
-                                                        @RequestHeader("Authorization") String token) {
-        eventService.deleteComment(eventId, token);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Delete Comment Success", null));
     }
 }
