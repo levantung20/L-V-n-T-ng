@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.example.demo.response;
 
 import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
@@ -6,22 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Document
-public class User {
+@AllArgsConstructor
+public class AccountResponse {
     @Id
     private String id;
-    private String avatar;
     private String name;
-    private int age;
-    @Indexed(unique = true)
+    private String avatar;
     private String email;
-    private String password;
-    private ERole role;
+    private ERole eRole;
     private AccountStatus accountStatus;
+    private String token;
+
+
 }

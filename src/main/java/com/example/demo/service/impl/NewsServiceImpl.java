@@ -122,9 +122,11 @@ public class NewsServiceImpl implements NewsService {
 
         Comment comment = new Comment();
         comment.setUserId(userId);
+//        comment.setEntityId(newsId);
         comment.setContent(createCommentRequest.getContent());
         comment.setCreatedDate(System.currentTimeMillis());
-//        commentRepository.save(comment);
+
+        commentRepository.save(comment);
         news.getComments().add(comment);
         return newsRepository.save(news);
     }
@@ -193,7 +195,7 @@ public class NewsServiceImpl implements NewsService {
         String commentId = subComment.getCommentId();
 
         if (!(role.equals(ERole.ADMIN)) || !(subComment.getUserId().equals(userId1)) || !(userId.equals(commentId)) ) {
-            throw new NewsNotFoundException("Unauthorized to delete Subcomment");
+            throw new NewsNotFoundException("Unauthorized to delete Sub-comment");
         }
         subCommentRepository.delete(subComment);
     }
