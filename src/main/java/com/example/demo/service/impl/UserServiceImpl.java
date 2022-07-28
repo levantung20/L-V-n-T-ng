@@ -4,7 +4,6 @@ import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.News;
 import com.example.demo.domain.User;
-import com.example.demo.dto.NewsDTO;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.update.UpdateUserRequest;
