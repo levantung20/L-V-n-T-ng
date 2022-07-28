@@ -1,29 +1,25 @@
-package com.example.demo.dto;
+package com.example.demo.utils;
 
 import com.example.demo.constant.StatusEvent;
 import com.example.demo.domain.Event;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
 import com.example.demo.service.JwtService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class EventDto {
+public class EventUtil {
 
-    private static EventDto eventDto;
-    public static EventDto getInstance(){
-        if (eventDto == null) {
-            eventDto = new EventDto();
+    private static EventUtil eventUtil;
+    public static EventUtil getInstance(){
+        if (eventUtil == null) {
+            eventUtil = new EventUtil();
         }
-        return eventDto;
+        return eventUtil;
     }
 
-    private EventDto() {
+    private EventUtil() {
 
     }
 

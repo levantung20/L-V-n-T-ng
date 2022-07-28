@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -17,21 +18,7 @@ public class NewsResponse {
     private String content;
     private String banner;
     private String hashTag;
-    private LocalDate createdDate;
-    private LocalDate lastUpdatedDate;
+    private Long createdDate;
+    private Date lastUpdatedDate;
     private int commentNumber;
-
-    public NewsResponse(String title, String content, String banner, String hashTag, Long createdDate, Long lastUpdatedDate, int commentNumber) {
-        this.title = title;
-        this.content = content;
-        this.banner = banner;
-        this.hashTag = hashTag;
-        if (createdDate != null) {
-            this.createdDate = LocalDate.ofEpochDay(Duration.ofMillis(createdDate).toDays());
-        }
-        if (lastUpdatedDate != null) {
-            this.lastUpdatedDate = LocalDate.ofEpochDay(Duration.ofMillis(lastUpdatedDate).toDays());
-        }
-        this.commentNumber = commentNumber;
-    }
 }

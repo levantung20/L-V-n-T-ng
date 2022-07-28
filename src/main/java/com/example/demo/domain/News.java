@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class News {
     private Long lastUpdatedDate;
     private String hashTag;
 
-    @DBRef
     private List<Comment> comments = new ArrayList<>();
 
 }

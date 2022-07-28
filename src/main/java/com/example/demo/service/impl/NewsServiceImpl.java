@@ -4,7 +4,13 @@ import com.example.demo.constant.ERole;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.News;
 import com.example.demo.domain.SubComment;
-import com.example.demo.dto.NewsDTO;
+import com.example.demo.domain.User;
+import com.example.demo.exception.CommentNotFoundException;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.response.CommentResponse;
+import com.example.demo.utils.DateConvert;
+import com.example.demo.utils.NewsUtil;
+import com.example.demo.utils.SubCommentUtil;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.CommentRepository;
@@ -14,23 +20,24 @@ import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateNewsRequest;
 import com.example.demo.request.create.CreateSubCommentRequest;
 import com.example.demo.request.update.UpdateNewsRequest;
+import com.example.demo.response.NewSearchResponse;
 import com.example.demo.response.NewsResponse;
-import com.example.demo.response.NewsResponsePage;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service @RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
     private final MongoTemplate mongoTemplate;
     @Autowired
@@ -45,6 +52,9 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     public SubCommentRepository subCommentRepository;
 
+    @Autowired
+    public UserRepository userRepository;
+
     @Override
     public News updateById(String id, UpdateNewsRequest request) {
         Optional<News> news = newsRepository.findById(id);
@@ -52,14 +62,14 @@ public class NewsServiceImpl implements NewsService {
             throw new NewsNotFoundException("Can't find news with id = " + request.getId());
         }
         News updateEntity = news.get();
-        NewsDTO.convertNewsRequestToNews1(request, updateEntity);
+        NewsUtil.convertNewsRequestToNews1(request, updateEntity);
 
         return newsRepository.save(updateEntity);
     }
 
     @Override
-    public News insert(CreateNewsRequest request) {
-        return newsRepository.insert(NewsDTO.convertNewsRequestToNews(request));
+    public News insert(String token, CreateNewsRequest request) {
+        return newsRepository.insert(NewsUtil.convertNewsRequestToNews(token, request));
     }
 
     @Override
@@ -77,29 +87,52 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponsePage findByHashTag(String hashTag, int page, int pageSize) {
+    public NewSearchResponse findByHashTag(String hashTag, int page, int pageSize) {
+        List<NewsResponse> newsResponses = newsRepository.findByHashTagLike(hashTag)
+                .stream().skip(pageSize * page)
+                .limit(pageSize)
+                .map(item -> {
+                    int sum = 0;
+                    List<Comment> comments = item.getComments();
+                    for (int i = 0; i < comments.size(); i++) {
+                        sum += comments.get(i).getSubComment().size();
+                    }
+                    sum += comments.size();
+                    return NewsResponse.builder()
+                            .banner(item.getBanner())
+                            .title(item.getTitle())
+                            .content(item.getContent())
+                            .hashTag(item.getHashTag())
+                            .lastUpdatedDate(DateConvert.convertLongToDate(item.getLastUpdatedDate()))
+                            .commentNumber(sum)
+                            .build();
+                }).collect(Collectors.toList());
+        return new NewSearchResponse(page, pageSize, newsResponses, hashTag);
+    }
 
-        // page - Current page. E.g: 1, 2, 3
-        // pageSize - The number of news on the page (20 items)
-        Sort sort = Sort.by(Sort.Direction.DESC, "lastUpdatedDate");
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
-        if (hashTag == null) {
-            hashTag = "";
+    @Override
+    public NewsResponse getNewsDetailById(String newsId) {
+        News news = newsRepository.findById(newsId).get();
+        if (news == null) {
+            throw new NewsNotFoundException("News Id does not exist");
         }
-
-        Page<News> newsPage = newsRepository.findByHashTagContaining(hashTag, pageable);
-
-        // Convert list News -> list NewsResponse
-        List<NewsResponse> contents = newsPage.getContent().stream()
-                .map(item -> new NewsResponse(item.getTitle(), item.getContent(), item.getBanner(), item.getHashTag(), item.getCreatedDate(), item.getLastUpdatedDate(), item.getComments().size()))
-                .collect(Collectors.toList());
-        return NewsResponsePage.builder()
-                .contents(contents)
-                .pageNo(page)
-                .pageSize(pageSize)
-                .totalPages(newsPage.getTotalPages())
-                .totalElements(newsPage.getTotalElements())
+        Integer commentNumber = 0;
+        List<Comment> comments = news.getComments();
+        for (int i = 0; i < comments.size(); i++) {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("entityId").is(newsId));
+            List<SubComment> countSubNumber = mongoTemplate.find(query, SubComment.class);
+            commentNumber += countSubNumber.size();
+            commentNumber += 1;
+        }
+        NewsResponse response = NewsResponse.builder()
+                .banner(news.getBanner())
+                .title(news.getTitle())
+                .content(news.getContent())
+                .lastUpdatedDate(DateConvert.convertLongToDate(news.getLastUpdatedDate()))
+                .commentNumber(commentNumber)
                 .build();
+        return response;
     }
 
     @Override
@@ -122,9 +155,10 @@ public class NewsServiceImpl implements NewsService {
 
         Comment comment = new Comment();
         comment.setUserId(userId);
+        comment.setEntityId(newsId);
         comment.setContent(createCommentRequest.getContent());
         comment.setCreatedDate(System.currentTimeMillis());
-//        commentRepository.save(comment);
+        commentRepository.save(comment);
         news.getComments().add(comment);
         return newsRepository.save(news);
     }
@@ -137,7 +171,7 @@ public class NewsServiceImpl implements NewsService {
         }
         String userId = jwtService.parseTokenToUserId(token);
         ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
-        if ((!userId.equals(comment.getUserId())  || !(eRole.equals(ERole.ADMIN)))){
+        if ((!userId.equals(comment.getUserId()) || !(eRole.equals(ERole.ADMIN)))) {
             throw new EventNotFoundException("Unauthorized to delete comment");
         }
         for (SubComment c : comment.getSubComment()) {
@@ -158,31 +192,36 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest) {
-        News news = newsRepository.findById(createSubCommentRequest.getEntityId()).get();
-        if (news == null){
-            throw new NewsNotFoundException("NewsID does not exist");
+    public Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest
+            createSubCommentRequest) {
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        if (comment.isEmpty()) {
+            throw new NewsNotFoundException("");
         }
-        Comment comment = commentRepository.findById(commentId).get();
-        if (comment == null){
-            throw new NewsNotFoundException("CommentID does not exist");
-        }
+        Comment comment1 = comment.get();
         String userId = jwtService.parseTokenToUserId(token);
-        SubComment subComment = new SubComment();
-        subComment.setEntityId(createSubCommentRequest.getEntityId());
-        subComment.setCommentId(commentId);
-        subComment.setUserId(userId);
-        subComment.setContent(createSubCommentRequest.getContent());
-        subComment.setCreatedDate(System.currentTimeMillis());
+        SubComment subComment = SubCommentUtil.convertSubCommentRequestToSubComment(createSubCommentRequest,
+                comment1.getEntityId(), userId, commentId);
         subCommentRepository.save(subComment);
-        comment.getSubComment().add(subComment);
-        return newsRepository.save(news);
+
+        comment1.getSubComment().add(subComment);
+        Optional<News> news = newsRepository.findById(comment1.getEntityId());
+        if (news.isPresent()) {
+            List<Comment> comments = news.get().getComments();
+            for (Comment c: comments) {
+                if (c.getId().equals(comment1.getId())) {
+                    c.getSubComment().add(subComment);
+                }
+            }
+            newsRepository.save(news.get());
+        }
+        return commentRepository.save(comment1);
     }
 
     @Override
     public void deleteSubComment(String token, String subCommentId) {
         SubComment subComment = subCommentRepository.findById(subCommentId).get();
-        if (subComment == null ){
+        if (subComment == null) {
             throw new NewsNotFoundException("SubCommentId does not exist");
         }
         Comment comment = commentRepository.findById(subComment.getCommentId()).get();
@@ -192,10 +231,38 @@ public class NewsServiceImpl implements NewsService {
         String userId1 = jwtService.parseTokenToUserId(token);
         String commentId = subComment.getCommentId();
 
-        if (!(role.equals(ERole.ADMIN)) || !(subComment.getUserId().equals(userId1)) || !(userId.equals(commentId)) ) {
+        if (!(role.equals(ERole.ADMIN)) || !(subComment.getUserId().equals(userId1)) || !(userId.equals(commentId))) {
             throw new NewsNotFoundException("Unauthorized to delete Subcomment");
         }
         subCommentRepository.delete(subComment);
+    }
+
+    @Override
+    public List<CommentResponse> getListComment(String newsId, int page, int pageSize) {
+        Optional<News> optionalNews = newsRepository.findById(newsId);
+        if (!optionalNews.isPresent()) {
+            throw new CommentNotFoundException("News id does not exist");
+        }
+
+        News news = optionalNews.get();
+        List<CommentResponse> result = news
+                .getComments()
+                .stream()
+                .map(comment -> {
+                    User user = userRepository.findById(comment.getUserId()).get();
+                    return CommentResponse.builder()
+                            .avatar(user.getAvatar())
+                            .userName(user.getName())
+                            .content(comment.getContent())
+                            .createdDate(comment.getCreatedDate())
+                            .subCommentNumber(comment.getSubComment().size())
+                            .build();
+                })
+                .skip(page * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
+        return result;
     }
 }
 

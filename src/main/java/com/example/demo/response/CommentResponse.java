@@ -1,12 +1,16 @@
 package com.example.demo.response;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class CommentReponse {
+@Builder
+public class CommentResponse {
     private String avatar;
-    private String name;
+    private String userName;
     private String content;
-    private String createdDate;
-    private String 
+    private Long createdDate;
+    private int commentNumber;
+    private int subCommentNumber;
+    private String replyComment;
 }

@@ -3,7 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.Event;
-import com.example.demo.dto.EventDto;
+import com.example.demo.utils.EventUtil;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.UserTypeNotAllow;
 import com.example.demo.repository.CommentRepository;
@@ -37,7 +37,7 @@ public class EventServiceImpl implements EventService {
         if (!erole.equals(ERole.ADMIN.toString())){
             throw new UserTypeNotAllow("Can't create news with role" + erole);
         }
-        return eventRepository.insert(EventDto.getInstance().convertEventRequestToEvent(createEventRequest, token));
+        return eventRepository.insert(EventUtil.getInstance().convertEventRequestToEvent(createEventRequest, token));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
         }
 
         String IdUserUpdate = jwtService.parseTokenToUserId(token);
-        EventDto.getInstance().convertEventRequestToEvent1(updateEventRequest, event);
+        EventUtil.getInstance().convertEventRequestToEvent1(updateEventRequest, event);
         event.setUpdateUserId(IdUserUpdate);
         event.setUpdateTime(System.currentTimeMillis());
         return eventRepository.save(event);

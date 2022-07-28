@@ -3,10 +3,12 @@ package com.example.demo.service;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.News;
 import com.example.demo.request.create.CreateCommentRequest;
+import com.example.demo.request.create.CreateNewsRequest;
 import com.example.demo.request.create.CreateSubCommentRequest;
 import com.example.demo.request.update.UpdateNewsRequest;
-import com.example.demo.request.create.CreateNewsRequest;
-import com.example.demo.response.NewsResponsePage;
+import com.example.demo.response.CommentResponse;
+import com.example.demo.response.NewSearchResponse;
+import com.example.demo.response.NewsResponse;
 
 import java.util.List;
 
@@ -17,9 +19,11 @@ public interface NewsService {
 
     News findById(String id);
 
-    News insert(CreateNewsRequest request);
+    News insert(String token, CreateNewsRequest request);
 
-    NewsResponsePage findByHashTag(String hashTags, int page, int pageSize);
+    NewSearchResponse findByHashTag(String hashTags, int page, int pageSize);
+
+    NewsResponse getNewsDetailById(String newsId);
 
     void deleteNewsById(String id, String token);
 
@@ -29,8 +33,12 @@ public interface NewsService {
 
     Long showCommentNumber(String newsId);
 
-    News addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
+    Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
 
     void deleteSubComment(String token, String subCommentId);
+
+    List<CommentResponse> getListComment(String newsId, int page, int pageSize);
+
+
 }
 

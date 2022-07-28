@@ -29,17 +29,19 @@ public class TokenController {
 
     @PostMapping("login")
     public ResponseEntity<ResponseObject> login(@Valid @RequestBody LoginRequest loginRequest) {
-        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
-        if (!user.isPresent()) {
+        Optional<User> userOpt = userRepository.findByEmail(loginRequest.getEmail());
+        if (!userOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                     .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "user does not exist in db", null));
         }
-        if (!user.get().getPassword().equalsIgnoreCase(loginRequest.getPassword())) {
+        User user = userOpt.get();
+
+        if (!user.getPassword().equalsIgnoreCase(loginRequest.getPassword())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                     .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password format", null));
         }
-        String token = jwtService.generateToken(user.get().getId(), user.get().getEmail(), user.get().getRole());
-        UserReponse userReponse = new UserReponse(user.get().getName(), user.get().getEmail(), user.get().getRole(), token);
+        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole());
+        UserReponse userReponse = new UserReponse(user.getName(), user.getEmail(), user.getRole(), token);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Login success", userReponse));
     }
 }

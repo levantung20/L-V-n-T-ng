@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.constant.ERole;
+import com.example.demo.domain.JWTData;
 import io.jsonwebtoken.Claims;
 
 import io.jsonwebtoken.Jwts;
@@ -28,20 +29,50 @@ public class JwtService{
     }
 
     public String parseTokenToRole(String token) {
+        if (token == null) {
+            return null;
+        }
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
         return claims.get("role").toString();
     }
 
     public String parseTokenToUserId(String token){
+        if (token == null) {
+            return null;
+        }
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
         return claims.get("userId").toString();
     }
 
+//    userid = parseTokenToUserId(token)
+//    ///...
+//    email = parseTokenToEmail(token)
+//        ///
+//    role = parseToRole(token)
+//        jwtData = parse(token)
+//    userid = jwtData.user
+
     public String parseTokenToEmail(String token){
+        if (token == null) {
+            return null;
+        }
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
         return claims.get("email").toString();
     }
+
+    public JWTData getDataFromToken(String token){
+        if (token == null) {
+            return null;
+        }
+        Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
+                .parseClaimsJws(token).getBody();
+        String email = claims.get("email").toString();
+        String userID = claims.get("userId").toString();
+        String role = claims.get("role").toString();
+        return new JWTData(userID, email, role);
+    }
+
 }

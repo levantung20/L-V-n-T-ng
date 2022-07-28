@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RoleAdmin;
 import com.example.demo.constant.ERole;
 import com.example.demo.request.create.CreateUserRequest;
 import com.example.demo.domain.User;
@@ -23,8 +24,9 @@ public class UserController {
     private final JwtService jwtService;
     private static final String KEY = "admin";
 
+    @RoleAdmin
     @PostMapping()
-    public ResponseEntity<ResponseObject> createUser(@Valid @RequestBody CreateUserRequest createUserRequest)
+    public ResponseEntity<ResponseObject> createUserAdmin(@Valid @RequestBody CreateUserRequest createUserRequest)
             throws Exception {
         if (createUserRequest.getKey() == null) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
@@ -48,14 +50,17 @@ public class UserController {
                 , "Creat User success", newUser));
     }
 
+
+    @RoleAdmin
     @PostMapping("createUser")
-    public ResponseEntity<ResponseObject> creatRoleUser(@RequestHeader("Authorization") String token,@Valid @RequestBody CreateUserRequest createUserRequest) {
-        String tokens = jwtService.parseTokenToRole(token);
-        if (tokens.equals(ERole.ADMIN)) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
-                            , "Role error (only admin can create)", null));
-        }
+    public ResponseEntity<ResponseObject> creatUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+//        String tokens = jwtService.parseTokenToRole(token);
+//        if (tokens.equals(ERole.ADMIN)) {
+//            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+//                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value()
+//                            , "Role error (only admin can create)", null));
+//        }
+
         User newUser = new User();
         newUser.setAvatar(createUserRequest.getAvatar());
         newUser.setName(createUserRequest.getName());

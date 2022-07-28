@@ -1,9 +1,9 @@
-package com.example.demo.dto;
+package com.example.demo.utils;
 
 import com.example.demo.domain.SubComment;
 import com.example.demo.request.create.CreateSubCommentRequest;
 
-public class SubCommentDTO {
+public class SubCommentUtil {
     public static SubComment convertSubCommentRequestToSubComment(CreateSubCommentRequest request, String entityId, String userId, String commentid) {
         return SubComment.builder()
                 .userId(userId)

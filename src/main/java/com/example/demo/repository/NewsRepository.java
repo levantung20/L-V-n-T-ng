@@ -13,5 +13,5 @@ import java.util.List;
 @Repository
 public interface NewsRepository extends MongoRepository<News, String> {
 
-    Page<News> findByHashTagContaining(String hashTag, Pageable pageable);
+    List<News> findByHashTagLike(String hashTag);
 }

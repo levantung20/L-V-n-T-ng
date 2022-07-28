@@ -20,6 +20,5 @@ public class Comment {
 
     private Long createdDate;
 
-    @DBRef
     private List<SubComment> subComment = new ArrayList<>();
 }
