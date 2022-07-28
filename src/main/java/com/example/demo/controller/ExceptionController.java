@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.text.ParseException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,14 @@ public class ExceptionController {
         return new ResponseObject(
                 HttpStatus.BAD_REQUEST.value(),
                 "Email has already taken!",
+                null);
+    }
+    @ExceptionHandler(value = {ParseException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseObject emailDuplicateException(ParseException ex, WebRequest request) {
+        return new ResponseObject(
+                HttpStatus.BAD_REQUEST.value(),
+                "Fail to parse time from string to long!",
                 null);
     }
 }

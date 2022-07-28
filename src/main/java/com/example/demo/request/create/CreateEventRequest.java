@@ -25,11 +25,11 @@ public class CreateEventRequest {
 
     private StatusEvent status;
 
-    @JsonFormat(pattern="dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd")
     @NotBlank(message = "Time begin must not be blank")
     private String timeBegin;
 
-    @JsonFormat(pattern="dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd")
     @NotBlank(message = "Time end must not be blank")
     private String timeEnd;
 

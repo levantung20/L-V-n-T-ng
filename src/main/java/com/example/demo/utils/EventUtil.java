@@ -32,7 +32,7 @@ public class EventUtil {
         event.setBanner(createEventRequest.getBanner());
         event.setTitle(createEventRequest.getTitle());
         event.setContent(createEventRequest.getContent());
-        event.setStatusEvent(StatusEvent.INCOMING);
+//        event.setStatusEvent(StatusEvent.INCOMING);
         event.setTimeBegin(createEventRequest.getTimeBegin());
         event.setTimeEnd(createEventRequest.getTimeEnd());
         event.setCreateTime(new Date().getTime());
