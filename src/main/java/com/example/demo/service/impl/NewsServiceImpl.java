@@ -152,7 +152,6 @@ public class NewsServiceImpl implements NewsService {
             throw new NewsNotFoundException("NewsId does not exist");
         }
         String userId = jwtService.parseTokenToUserId(token);
-
         Comment comment = new Comment();
         comment.setUserId(userId);
         comment.setEntityId(newsId);
@@ -208,7 +207,7 @@ public class NewsServiceImpl implements NewsService {
         Optional<News> news = newsRepository.findById(comment1.getEntityId());
         if (news.isPresent()) {
             List<Comment> comments = news.get().getComments();
-            for (Comment c: comments) {
+            for (Comment c : comments) {
                 if (c.getId().equals(comment1.getId())) {
                     c.getSubComment().add(subComment);
                 }
@@ -230,9 +229,9 @@ public class NewsServiceImpl implements NewsService {
         ERole role = ERole.valueOf(jwtService.parseTokenToRole(token));
         String userId1 = jwtService.parseTokenToUserId(token);
         String commentId = subComment.getCommentId();
-
         if (!(role.equals(ERole.ADMIN)) || !(subComment.getUserId().equals(userId1)) || !(userId.equals(commentId))) {
             throw new NewsNotFoundException("Unauthorized to delete Subcomment");
+
         }
         subCommentRepository.delete(subComment);
     }
@@ -263,6 +262,7 @@ public class NewsServiceImpl implements NewsService {
                 .collect(Collectors.toList());
 
         return result;
-    }
-}
 
+    }
+
+}

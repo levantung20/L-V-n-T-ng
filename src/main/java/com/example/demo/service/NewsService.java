@@ -13,31 +13,31 @@ import com.example.demo.response.NewsResponse;
 import java.util.List;
 
 public interface NewsService {
-    News updateById(String id, UpdateNewsRequest request);
+    public News updateById(String id, UpdateNewsRequest request);
 
-    List<News> findAll(Integer page, Integer pageSize);
+    public List<News> findAll(Integer page, Integer pageSize);
 
-    News findById(String id);
+    public News findById(String id);
 
-    News insert(String token, CreateNewsRequest request);
+    public News insert(String token, CreateNewsRequest request);
 
-    NewSearchResponse findByHashTag(String hashTags, int page, int pageSize);
+    public NewSearchResponse findByHashTag(String hashTags, int page, int pageSize);
 
-    NewsResponse getNewsDetailById(String newsId);
+    public NewsResponse getNewsDetailById(String newsId);
 
-    void deleteNewsById(String id, String token);
+    public void deleteNewsById(String id, String token);
 
-    News addComment(String newsId, String token, CreateCommentRequest createCommentRequest);
+    public News addComment(String newsId, String token, CreateCommentRequest createCommentRequest);
 
-    void deleteComment(String commentId, String token);
+    public void deleteComment(String commentId, String token);
 
-    Long showCommentNumber(String newsId);
+    public Long showCommentNumber(String newsId);
 
-    Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
+    public Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
 
-    void deleteSubComment(String token, String subCommentId);
+    public void deleteSubComment(String token, String subCommentId);
 
-    List<CommentResponse> getListComment(String newsId, int page, int pageSize);
+    public List<CommentResponse> getListComment(String newsId, int page, int pageSize);
 
 
 }
