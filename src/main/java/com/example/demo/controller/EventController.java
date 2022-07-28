@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("demo/v1/events/")
@@ -38,12 +39,6 @@ public class EventController {
         Event event = eventService.save(updateEventRequest, eventId, token);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Update Event Success", event));
-    }
-
-    @GetMapping("{eventId}")
-    public ResponseEntity<ResponseObject> getDetailEventById(@PathVariable(name = "eventId") String eventId){
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Get Detail Event By EventId " + eventId + " Success", eventService.findById(eventId)));
     }
 
     @DeleteMapping("{eventId}")
@@ -76,5 +71,14 @@ public class EventController {
         eventService.deleteComment(eventId, token);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Delete Comment Success", null));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseObject> getEventById(@PathVariable(name = "id") String id){
+        Optional<Event> findById = Optional.ofNullable(eventService.findById(id));
+        if (findById.isPresent()) {
+            Event event = eventService.getEventStatus(findById.get());
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(),"Get events with id" + id, event));
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseObject(HttpStatus.NO_CONTENT.value(),"Event with id " + id + "is empty!",null));
     }
 }

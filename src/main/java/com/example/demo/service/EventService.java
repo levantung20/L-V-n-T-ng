@@ -20,5 +20,7 @@ public interface EventService {
 
     void deleteComment(String eventId, String token);
 
+    Event getEventStatus(Event event);
+
     List<Event> getListEventByStatusEvent(String statusEvent, Integer page, Integer pageSize);
 }

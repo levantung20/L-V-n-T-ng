@@ -34,7 +34,7 @@ public class Event {
     private String content;
 
     private StatusEvent statusEvent;
-
+    
     private String timeBegin;
 
     private String timeEnd;

@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.constant.ERole;
+import com.example.demo.constant.StatusEvent;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.Event;
 import com.example.demo.utils.EventUtil;
@@ -16,6 +17,8 @@ import com.example.demo.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,6 +123,22 @@ public class EventServiceImpl implements EventService {
         eventRepository.deleteById(eventId);
     }
 
+    @Override
+    public Event getEventStatus(Event event) {
+        String dateTimeStartString = String.valueOf(event.getTimeBegin());
+        String dateTimeFinishString = String.valueOf(event.getTimeEnd());
+        LocalDateTime dateStartTime = LocalDateTime.parse(dateTimeStartString);
+        LocalDateTime dateFinishTime = LocalDateTime.parse(dateTimeFinishString);
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        if (now.isBefore(dateStartTime)){
+            event.setStatusEvent(StatusEvent.INCOMING);
+        }else if (now.isAfter(dateFinishTime)){
+            event.setStatusEvent(StatusEvent.FINISHED);
+        }else {
+            event.setStatusEvent(StatusEvent.HAPPENING);
+        }
+        return event;
+    }
 
 
 }
