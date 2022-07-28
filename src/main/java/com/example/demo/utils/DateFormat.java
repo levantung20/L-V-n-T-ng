@@ -7,7 +7,7 @@ import java.util.Date;
 public class DateFormat {
     public static Date convertStringToDate(Long date) throws ParseException {
         Date date1 = new Date(date);
-        return new SimpleDateFormat("dd/MM/yyyy")
+        return new SimpleDateFormat("yyyy/MM/dd")
                 .parse(date1.toString());
     }
 }

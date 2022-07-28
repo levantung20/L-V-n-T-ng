@@ -26,14 +26,15 @@ public class EventUtil {
     private JwtService jwtService = new JwtService();
 
     public Event convertEventRequestToEvent(CreateEventRequest createEventRequest, String token) {
+        System.out.println(createEventRequest);
         Event event = new Event();
         event.setCreateUserId(jwtService.parseTokenToUserId(token));
         event.setBanner(createEventRequest.getBanner());
         event.setTitle(createEventRequest.getTitle());
         event.setContent(createEventRequest.getContent());
-        event.setStatusEvent(StatusEvent.INCOMING);
-        event.setTimeBegin(createEventRequest.getTimeBegin().toString());
-        event.setTimeEnd(createEventRequest.getTimeEnd().toString());
+//        event.setStatusEvent(StatusEvent.INCOMING);
+        event.setTimeBegin(createEventRequest.getTimeBegin());
+        event.setTimeEnd(createEventRequest.getTimeEnd());
         event.setCreateTime(new Date().getTime());
         return event;
     }

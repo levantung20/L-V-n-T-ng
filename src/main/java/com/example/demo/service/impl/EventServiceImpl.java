@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.constant.ERole;
+import com.example.demo.constant.StatusEvent;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.Event;
 import com.example.demo.utils.EventUtil;
@@ -16,7 +17,15 @@ import com.example.demo.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +43,7 @@ public class EventServiceImpl implements EventService {
     public Event insert(CreateEventRequest createEventRequest, String token) {
         String erole = jwtService.parseTokenToRole(token);
 
-        if (!erole.equals(ERole.ADMIN.toString())){
+        if (!erole.equals(ERole.ADMIN.toString())) {
             throw new UserTypeNotAllow("Can't create news with role" + erole);
         }
         return eventRepository.insert(EventUtil.getInstance().convertEventRequestToEvent(createEventRequest, token));
@@ -43,7 +52,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event save(UpdateEventRequest updateEventRequest, String eventId, String token) {
         Event event = eventRepository.findById(eventId).get();
-        if (event == null){
+        if (event == null) {
             throw new EventNotFoundException("Can't find Event with id = " + eventId);
         }
         ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
@@ -59,18 +68,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event findById(String eventId) {
-        Event event = eventRepository.findById(eventId).get();
-        if (event == null) {
-            throw new EventNotFoundException("Can't find event with eventId = " + eventId);
-        }
-        return event;
+    public Optional<Event> findById(String id) {
+        return eventRepository.findById(id);
     }
 
     @Override
     public void deleteEventById(String eventId, String token) {
         Event event = eventRepository.findById(eventId).get();
-        if (event == null){
+        if (event == null) {
             throw new EventNotFoundException("Can't delete eventId = " + eventId + " , it does not exit");
         }
         String userIdCreatEvent = jwtService.parseTokenToUserId(token);
@@ -120,6 +125,20 @@ public class EventServiceImpl implements EventService {
         eventRepository.deleteById(eventId);
     }
 
+    @Override
+    public Event getEventStatus(Event event) throws ParseException {
+        Date start = new SimpleDateFormat("yyyy-MM-dd").parse(event.getTimeBegin());
+        Date end = new SimpleDateFormat("yyyy-MM-dd").parse(event.getTimeEnd());
+        Date now = new Date(System.currentTimeMillis());
+        if (now.before(start)) {
+            event.setStatusEvent(StatusEvent.INCOMING);
+        } else if (now.after(end)) {
+            event.setStatusEvent(StatusEvent.FINISHED);
+        } else {
+            event.setStatusEvent(StatusEvent.HAPPENING);
+        }
+        return event;
+    }
 
 
 }
