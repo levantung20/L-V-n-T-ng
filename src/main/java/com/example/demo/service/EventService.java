@@ -4,6 +4,8 @@ import com.example.demo.domain.Event;
 import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
+import com.example.demo.response.EventIncomingResponse;
+import com.example.demo.response.EventSearchResponse;
 
 import java.text.ParseException;
 import java.util.List;
@@ -24,5 +26,9 @@ public interface EventService {
 
     Event getEventStatus(Event event) throws ParseException;
 
+    List<EventIncomingResponse> getIncomingEvent();
+
     List<Event> getListEventByStatusEvent(String statusEvent, Integer page, Integer pageSize);
+
+    List<EventSearchResponse> listEventInYear();
 }

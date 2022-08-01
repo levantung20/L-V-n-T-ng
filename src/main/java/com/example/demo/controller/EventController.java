@@ -4,6 +4,8 @@ import com.example.demo.domain.Event;
 import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
+import com.example.demo.response.EventIncomingResponse;
+import com.example.demo.response.EventSearchResponse;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -87,5 +90,15 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(),"Get events with id" + id, event));
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseObject(HttpStatus.NO_CONTENT.value(),"Event with id " + id + "is empty!",null));
+    }
+    @GetMapping("incoming")
+    public ResponseEntity<ResponseObject> getIncomingEvents() {
+        List<EventIncomingResponse> result = eventService.getIncomingEvent();
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),"Find event with success",result));
+    }
+    @GetMapping("tree")
+    public ResponseEntity<ResponseObject> getEventsInYear() {
+        List<EventSearchResponse> result = eventService.listEventInYear();
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),"Find event with success",result));
     }
 }
