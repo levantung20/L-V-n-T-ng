@@ -13,13 +13,10 @@ import com.example.demo.response.NewsResponse;
 import java.util.List;
 
 public interface NewsService {
-    public News updateById(String id, UpdateNewsRequest request);
-
-    public List<News> findAll(Integer page, Integer pageSize);
+    public NewsResponse insert(String token, CreateNewsRequest request);
+    public NewsResponse save(String id, UpdateNewsRequest request);
 
     public News findById(String id);
-
-    public News insert(String token, CreateNewsRequest request);
 
     public NewSearchResponse findByHashTag(String hashTags, int page, int pageSize);
 
@@ -30,8 +27,6 @@ public interface NewsService {
     public News addComment(String newsId, String token, CreateCommentRequest createCommentRequest);
 
     public void deleteComment(String commentId, String token);
-
-    public Long showCommentNumber(String newsId);
 
     public Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
 

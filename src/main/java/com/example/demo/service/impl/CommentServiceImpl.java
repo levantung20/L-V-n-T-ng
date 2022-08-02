@@ -7,7 +7,7 @@ import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.response.CommentResponse;
 import com.example.demo.service.CommentService;
-import com.example.demo.utils.DateConvert;
+import com.example.demo.converter.DateConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

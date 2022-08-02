@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
@@ -22,51 +23,37 @@ import java.util.Optional;
 @RequestMapping("demo/v1/tokens/")
 @RequiredArgsConstructor
 public class TokenController {
-
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
     private final UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
-
-    @PostMapping("login")
+    @PostMapping("")
     public ResponseEntity<ResponseObject> login(@Valid @RequestBody LoginRequest loginRequest) {
         Optional<User> userOpt = userRepository.findByEmail(loginRequest.getEmail());
-        if (!userOpt.isPresent()) {
+
+        if (userOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "user does not exist in db", null));
+                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(),
+                            "wrong email", null));
         }
+
         User user = userOpt.get();
 
         if (!user.getPassword().equalsIgnoreCase(loginRequest.getPassword())) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(), "wrong password format", null));
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).
+                    body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(),
+                            "wrong password format", null));
+        }
+
+        if (user.getAccountStatus().toString().equals(AccountStatus.INACTIVE.toString())) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).
+                    body(new ResponseObject(HttpStatus.NOT_ACCEPTABLE.value(),
+                            "User inactive", null));
         }
 
         String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole());
-        LoginResponse loginResponse = new LoginResponse(user.getId(), user.getName(), user.getEmail(), user.getRole(), token);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Login success", loginResponse));
-    }
-
-    @PutMapping("inActiveUser/{id}")
-    public  ResponseEntity<ResponseObject> inActiveUserAccount(@PathVariable(name = "id") String id, @RequestHeader("Authorization") String token){
-        String userFixRole = jwtService.parseTokenToRole(token);
-        if(!userFixRole.equals(ERole.ADMIN.toString())){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(HttpStatus.UNAUTHORIZED.value(),"Deactive Account",null));
-        }
-        User user = userService.inActiveUserAccount(id);
-        AccountResponse accountResponse = new AccountResponse(user.getId(),user.getAvatar(),user.getName(),user.getEmail(),user.getRole(),user.getAccountStatus(),null);
-        return  ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),"Get User By Id Success",accountResponse));
-    }
-    @PutMapping("activeUser/{id}")
-    public ResponseEntity<ResponseObject> activeUserAccount(@PathVariable(name = "id") String id, @RequestHeader("Authorization") String token){
-        String userFixRole = jwtService.parseTokenToRole(token);
-        if(!userFixRole.equals(ERole.ADMIN.toString())){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(HttpStatus.UNAUTHORIZED.value(),"active user account succeccfuly!!!",null));
-        }
-        User user = userService.activeUserAccount(id);
-        AccountResponse accountResponse = new AccountResponse(user.getId(),user.getAvatar(),user.getName(),user.getEmail(),user.getRole(),user.getAccountStatus(),null);
-        return  ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),"Get User By Id Success",accountResponse));
+        LoginResponse loginResponse = new LoginResponse(user.getId(),
+                user.getName(), user.getEmail(), user.getRole(), token);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "Login success", loginResponse));
     }
 }

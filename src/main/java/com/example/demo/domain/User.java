@@ -18,7 +18,6 @@ public class User {
     private String id;
     private String avatar;
     private String name;
-    private int age;
     @Indexed(unique = true)
     private String email;
     private String password;

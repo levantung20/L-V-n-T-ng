@@ -1,10 +1,10 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.constant.ERole;
 import com.example.demo.constant.StatusEvent;
+import com.example.demo.converter.DateConvert;
+import com.example.demo.converter.EventConverter;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.Event;
-import com.example.demo.utils.EventUtil;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.UserTypeNotAllow;
 import com.example.demo.repository.CommentRepository;
@@ -12,41 +12,35 @@ import com.example.demo.repository.EventRepository;
 import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
+import com.example.demo.response.EventIncomingResponse;
+import com.example.demo.response.EventResponse;
+import com.example.demo.response.EventSearchResponse;
 import com.example.demo.service.EventService;
 import com.example.demo.service.JwtService;
+import com.example.demo.util.JwtData;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    public EventRepository eventRepository;
-
-    @Autowired
-    public CommentRepository commentRepository;
-
+    private final JwtService jwtService;
+    private final EventRepository eventRepository;
     @Override
-    public Event insert(CreateEventRequest createEventRequest, String token) {
-        String erole = jwtService.parseTokenToRole(token);
-
-        if (!erole.equals(ERole.ADMIN.toString())) {
-            throw new UserTypeNotAllow("Can't create news with role" + erole);
-        }
-        return eventRepository.insert(EventUtil.getInstance().convertEventRequestToEvent(createEventRequest, token));
+    public EventResponse insert(String token, CreateEventRequest createEventRequest) throws Exception {
+        JwtData jwtData = jwtService.parseToken(token);
+        String userId = jwtData.getUserId();
+        Event event = EventConverter.convertToEvent(userId, createEventRequest);
+        Event insertedValue = eventRepository.insert(event);
+        return EventConverter.convertToResponse(insertedValue);
     }
 
     @Override
@@ -55,21 +49,49 @@ public class EventServiceImpl implements EventService {
         if (event == null) {
             throw new EventNotFoundException("Can't find Event with id = " + eventId);
         }
-        ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
-        if (!eRole.equals(ERole.ADMIN)) {
-            throw new UserTypeNotAllow("Can't update event with role equal user");
-        }
-
-        String IdUserUpdate = jwtService.parseTokenToUserId(token);
-        EventUtil.getInstance().convertEventRequestToEvent1(updateEventRequest, event);
-        event.setUpdateUserId(IdUserUpdate);
-        event.setUpdateTime(System.currentTimeMillis());
+        JwtData jwtData = jwtService.parseToken(token);
+        String userId = jwtData.getUserId();
+        event.setUpdateUserId(userId);
+        event.setLastUpdateTime(System.currentTimeMillis());
         return eventRepository.save(event);
     }
 
     @Override
-    public Optional<Event> findById(String id) {
-        return eventRepository.findById(id);
+    public EventResponse getEventById(String eventId) {
+        Event event = eventRepository.findById(eventId).get();
+        if (event == null) {
+            throw new EventNotFoundException("EVENT ID DOES NOT EXIST");
+        }
+        return EventConverter.convertToResponse(event);
+    }
+
+    @Override
+    public List<EventSearchResponse> listEventByStatus(int page, int pageSize, StatusEvent statusEvent) {
+        return eventRepository.findEventByStatusEvent(statusEvent)
+                .stream()
+                .skip((long) page * pageSize)
+                .limit(pageSize)
+                .map(event -> new EventSearchResponse(event.getId(), event.getTitle(),
+                        DateConvert.convertLongToDate(event.getTimeBegin()), event.getStatusEvent()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EventResponse> getListEvent() {
+        return eventRepository.findAll()
+                .stream()
+                .map(event ->
+                    EventResponse.builder()
+                            .id(event.getId())
+                            .title(event.getTitle())
+                            .banner(event.getBanner())
+                            .content(event.getContent())
+                            .statusEvent(event.getStatusEvent())
+                            .timeBegin(DateConvert.convertLongToDate(event.getTimeBegin()))
+                            .timeEnd(DateConvert.convertLongToDate(event.getTimeEnd()))
+                            .build()
+                        )
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -86,58 +108,28 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event addCommentToEvent(String eventId, String token, CreateCommentRequest createCommentRequest) {
-        Event event = eventRepository.findById(eventId).get();
-        if (event == null) {
-            throw new EventNotFoundException("EventId does not exit");
-        }
-        String userId = jwtService.parseTokenToUserId(token);
-        Comment comment = new Comment();
-        comment.setEntityId(eventId);
-        comment.setUserId(userId);
-        comment.setContent(createCommentRequest.getContent());
-        comment.setCreatedDate(System.currentTimeMillis());
-        commentRepository.save(comment);
-        event.getComments().add(comment);
-        return eventRepository.save(event);
+    public List<EventIncomingResponse> getIncomingEvent() {
+        return eventRepository.findEventByStatusEvent(StatusEvent.INCOMING)
+                .stream()
+                .sorted(Comparator.comparingLong(Event::getTimeBegin).reversed())
+                .map(EventConverter::convertToIncomingResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Event> getListEventByStatusEvent(String statusEvent, Integer page, Integer pageSize) {
-        List<Event> events = eventRepository.findEventByStatusEvent(statusEvent).stream().skip((page - 1) * pageSize)
-                .limit(pageSize).collect(Collectors.toList());
-        if (events.isEmpty()) {
-            throw new EventNotFoundException("Status Event does not exist");
-        }
-        return events;
-    }
+    public List<EventSearchResponse> listEventInYear() {
 
-    @Override
-    public void deleteComment(String eventId, String token) {
-        Event event = eventRepository.findById(eventId).get();
-        if (event == null) {
-            throw new EventNotFoundException("EventId does not exist");
+        List<Event> eventList = eventRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparingLong(Event::getTimeBegin).reversed())
+                .collect(Collectors.toList());
+        List<EventSearchResponse> eventInYear = new ArrayList<>();
+        for (Event e : eventList) {
+            if (DateConvert.checkInYear(e.getTimeBegin())) {
+                eventInYear.add(EventConverter.convertToSearchResponse(e));
+            }
         }
-        String userId = jwtService.parseTokenToUserId(token);
-        if (!event.getCreateUserId().equals(userId)) {
-            throw new EventNotFoundException("Unauthorized to delete comment");
-        }
-        eventRepository.deleteById(eventId);
-    }
-
-    @Override
-    public Event getEventStatus(Event event) throws ParseException {
-        Date start = new SimpleDateFormat("yyyy-MM-dd").parse(event.getTimeBegin());
-        Date end = new SimpleDateFormat("yyyy-MM-dd").parse(event.getTimeEnd());
-        Date now = new Date(System.currentTimeMillis());
-        if (now.before(start)) {
-            event.setStatusEvent(StatusEvent.INCOMING);
-        } else if (now.after(end)) {
-            event.setStatusEvent(StatusEvent.FINISHED);
-        } else {
-            event.setStatusEvent(StatusEvent.HAPPENING);
-        }
-        return event;
+        return eventInYear;
     }
 
 

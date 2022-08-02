@@ -3,6 +3,7 @@ package com.example.demo.domain;
 import com.example.demo.constant.StatusEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -19,6 +20,7 @@ import java.util.List;
 @Document
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Event {
     @Id
     private String id;
@@ -36,15 +38,13 @@ public class Event {
 
     private StatusEvent statusEvent;
 
-    private String timeBegin;
+    private Long timeBegin;
 
-    private String timeEnd;
+    private Long timeEnd;
 
     private Long createTime;
 
-    private Long updateTime;
+    private Long lastUpdateTime;
 
     private List<Comment> comments = new ArrayList<>();
-
-
 }

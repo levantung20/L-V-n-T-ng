@@ -18,7 +18,6 @@ public class NewsResponse {
     private String content;
     private String banner;
     private String hashTag;
-    private Long createdDate;
-    private Date lastUpdatedDate;
+    private String lastUpdatedDate;
     private int commentNumber;
 }

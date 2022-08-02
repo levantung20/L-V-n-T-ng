@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubCommentRepository extends MongoRepository<SubComment, String> {
-
+    void deleteAllByEntityId(String entityId);
 }

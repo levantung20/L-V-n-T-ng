@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EventSearchResponse {
+    private String id;
     private String title;
     private String timeBegin;
     private StatusEvent statusEvent;

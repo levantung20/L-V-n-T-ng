@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.constant.ERole;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.News;
 import com.example.demo.domain.SubComment;
@@ -8,9 +7,9 @@ import com.example.demo.domain.User;
 import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.response.CommentResponse;
-import com.example.demo.utils.DateConvert;
-import com.example.demo.utils.NewsUtil;
-import com.example.demo.utils.SubCommentUtil;
+import com.example.demo.converter.DateConvert;
+import com.example.demo.converter.NewsConverter;
+import com.example.demo.converter.SubCommentConverter;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.CommentRepository;
@@ -40,41 +39,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NewsServiceImpl implements NewsService {
     private final MongoTemplate mongoTemplate;
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    public NewsRepository newsRepository;
-
-    @Autowired
-    public CommentRepository commentRepository;
-
-    @Autowired
-    public SubCommentRepository subCommentRepository;
-
-    @Autowired
-    public UserRepository userRepository;
+    private final JwtService jwtService;
+    private final NewsRepository newsRepository;
+    private final CommentRepository commentRepository;
+    private final SubCommentRepository subCommentRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public News updateById(String id, UpdateNewsRequest request) {
+    public NewsResponse insert(String token, CreateNewsRequest request) {
+        News news = newsRepository.insert(NewsConverter.convertNewsRequestToNews(token, request));
+        return NewsConverter.convertNewsToNewsResponse(news, 0);
+    }
+
+    @Override
+    public NewsResponse save(String id, UpdateNewsRequest request) {
         Optional<News> news = newsRepository.findById(id);
         if (news.isEmpty()) {
             throw new NewsNotFoundException("Can't find news with id = " + request.getId());
         }
         News updateEntity = news.get();
-        NewsUtil.convertNewsRequestToNews1(request, updateEntity);
-
-        return newsRepository.save(updateEntity);
-    }
-
-    @Override
-    public News insert(String token, CreateNewsRequest request) {
-        return newsRepository.insert(NewsUtil.convertNewsRequestToNews(token, request));
-    }
-
-    @Override
-    public List<News> findAll(Integer page, Integer pageSize) {
-        return newsRepository.findAll(PageRequest.of(page, pageSize)).toList();
+        NewsConverter.convertNewsRequestToNews1(request, updateEntity);
+        News news1 =  newsRepository.save(updateEntity);
+        return NewsConverter.convertNewsToNewsResponse(news1, 0);
     }
 
     @Override
@@ -142,6 +128,8 @@ public class NewsServiceImpl implements NewsService {
         if (!createUserIdCheck.equals(news.getCreateUserId())) {
             throw new NewsNotFoundException("NewsId does not exist");
         }
+        commentRepository.deleteAllByEntityId(id);
+        subCommentRepository.deleteAllByEntityId(id);
         newsRepository.deleteById(id);
     }
 
@@ -169,25 +157,13 @@ public class NewsServiceImpl implements NewsService {
             throw new EventNotFoundException("NewsId does not exit");
         }
         String userId = jwtService.parseTokenToUserId(token);
-        ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
-        if ((!userId.equals(comment.getUserId()) || !(eRole.equals(ERole.ADMIN)))) {
+        if ((!userId.equals(comment.getUserId()))) {
             throw new EventNotFoundException("Unauthorized to delete comment");
         }
         for (SubComment c : comment.getSubComment()) {
             subCommentRepository.deleteById(c.getId());
         }
-
         commentRepository.deleteById(commentId);
-    }
-
-    @Override
-    public Long showCommentNumber(String newsId) {
-        News news = newsRepository.findById(newsId).get();
-        if (news == null) {
-            throw new NewsNotFoundException("This newsId does not exist");
-        }
-        Long commentNumber = Long.valueOf(news.getComments().size());
-        return commentNumber;
     }
 
     @Override
@@ -199,7 +175,7 @@ public class NewsServiceImpl implements NewsService {
         }
         Comment comment1 = comment.get();
         String userId = jwtService.parseTokenToUserId(token);
-        SubComment subComment = SubCommentUtil.convertSubCommentRequestToSubComment(createSubCommentRequest,
+        SubComment subComment = SubCommentConverter.convertSubCommentRequestToSubComment(createSubCommentRequest,
                 comment1.getEntityId(), userId, commentId);
         subCommentRepository.save(subComment);
 
@@ -226,10 +202,9 @@ public class NewsServiceImpl implements NewsService {
         Comment comment = commentRepository.findById(subComment.getCommentId()).get();
         String userId = comment.getUserId();
 
-        ERole role = ERole.valueOf(jwtService.parseTokenToRole(token));
         String userId1 = jwtService.parseTokenToUserId(token);
         String commentId = subComment.getCommentId();
-        if (!(role.equals(ERole.ADMIN)) || !(subComment.getUserId().equals(userId1)) || !(userId.equals(commentId))) {
+        if (!(subComment.getUserId().equals(userId1)) || !(userId.equals(commentId))) {
             throw new NewsNotFoundException("Unauthorized to delete Subcomment");
 
         }
@@ -260,9 +235,6 @@ public class NewsServiceImpl implements NewsService {
                 .skip(page * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
-
         return result;
-
     }
-
 }

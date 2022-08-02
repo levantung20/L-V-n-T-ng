@@ -13,6 +13,7 @@ import com.example.demo.request.update.UpdateNewsRequest;
 import com.example.demo.response.*;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewsService;
+import com.example.demo.util.JwtData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +37,7 @@ public class NewsController {
     private ResponseEntity<ResponseObject> createNews(
             @RequestHeader("Authorization") String token,
             @Valid @RequestBody CreateNewsRequest request) {
-//        String role = jwtService.parseTokenToRole(token);
-//        if (!role.equals(ERole.ADMIN.name())) {
-//            throw new UserTypeNotAllow("can't create news with role = " + role);
-//        }
-
-        News newsEntity = newsService.insert(token, request);
+        NewsResponse newsEntity = newsService.insert(token, request);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.CREATED.value(),
                 "Creat news success", newsEntity));
     }
@@ -55,7 +51,6 @@ public class NewsController {
                 "Creat news success", newsResponse));
     }
 
-
     @GetMapping("detail/{newsId}")
     public ResponseEntity<ResponseObject> getDetailNewsById(@PathVariable(name = "newsId") String newsId) {
         NewsResponse newsResponse = newsService.getNewsDetailById(newsId);
@@ -63,25 +58,20 @@ public class NewsController {
                 , "Get detail news by id" + newsId, newsResponse));
     }
 
-
     @RoleAdmin
     @PutMapping("{id}")
     public ResponseEntity<ResponseObject> updateNews(
             @RequestHeader("Authorization") String token,
             @PathVariable(name = "id") String id,
             @RequestBody UpdateNewsRequest request) {
-//        ERole eRole = ERole.valueOf(jwtService.parseTokenToRole(token));
-//        if (!eRole.equals(ERole.ADMIN)) {
-//            throw new UserTypeNotAllow("can't not update news with role equal user");
-//        }
         String updateBy = jwtService.parseTokenToUserId(token);
-        JWTData data = jwtService.getDataFromToken(token);
+        JwtData data = jwtService.parseToken(token);
         data.getUserId();
         if (updateBy != null) {
             request.setUpdateUserId(updateBy);
         }
 
-        News news = newsService.updateById(id, request);
+        NewsResponse news = newsService.save(id, request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject(HttpStatus.OK.value()
                         , "Update successfully"
@@ -107,19 +97,13 @@ public class NewsController {
                 "Comment To News Success", newsEntity));
     }
 
+    @RoleAdmin
     @DeleteMapping("{commentId}/comments")
     public ResponseEntity<ResponseObject> deleteComment(@PathVariable(name = "commentId") String commentId,
                                                         @RequestHeader("Authorization") String token) {
         newsService.deleteComment(commentId, token);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Delete Comment Success", null));
-    }
-
-    @GetMapping("{newsId}/commentNumber")
-    public ResponseEntity<ResponseObject> showCommentNumber(@PathVariable(name = "newsId") String newsId) {
-        newsService.showCommentNumber(newsId);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Show comment number success", null));
     }
 
     @PostMapping("{commentId}/subComment")
@@ -131,6 +115,7 @@ public class NewsController {
                 "Add SubComment To Success", comment));
     }
 
+    @RoleAdmin
     @DeleteMapping("subcomment/{subCommentId}")
     public ResponseEntity<ResponseObject> deleteSubCommentById(@RequestHeader("Authorization") String token,
                                                                @PathVariable(name = "subCommentId") String subCommentId) {

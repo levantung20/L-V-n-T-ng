@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RoleAdmin;
+import com.example.demo.constant.StatusEvent;
 import com.example.demo.domain.Event;
 import com.example.demo.request.create.CreateCommentRequest;
 import com.example.demo.request.create.CreateEventRequest;
 import com.example.demo.request.update.UpdateEventRequest;
 import com.example.demo.response.EventIncomingResponse;
+import com.example.demo.response.EventResponse;
 import com.example.demo.response.EventSearchResponse;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.EventService;
@@ -20,20 +23,23 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("demo/v1/events")
+@RequestMapping("demo/v1/events/")
 @RequiredArgsConstructor
 public class EventController {
 
     @Autowired
     public EventService eventService;
 
+    @RoleAdmin
     @PostMapping()
-    public ResponseEntity<ResponseObject> createEvent(@RequestHeader("Authorization") String token,
-                                                      @Valid @RequestBody CreateEventRequest createEventRequest){
+    public ResponseEntity<ResponseObject> createEvent(@Valid @RequestHeader("Authorization") String token,
+                                                       @RequestBody CreateEventRequest createEventRequest) throws Exception {
+        EventResponse eventResponse = eventService.insert(token, createEventRequest);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Create Event success", eventService.insert(createEventRequest, token)));
+                "Create Event success", eventResponse));
     }
 
+    @RoleAdmin
     @PutMapping("{eventId}")
     public ResponseEntity<ResponseObject> updateEvent(@PathVariable(name = "eventId") String eventId,
                                                       @Valid
@@ -44,12 +50,7 @@ public class EventController {
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Update Event Success", event));
     }
-    public boolean isNews(String id){
-        Optional<Event> news = eventService.findById(id);
-        if (news.isPresent())
-            return true;
-        return false;
-    }
+    @RoleAdmin
     @DeleteMapping("{eventId}")
     public ResponseEntity<ResponseObject> deleteEventById(@PathVariable(name = "eventId") String eventId,
                                                           @RequestHeader("Authorization") String token) {
@@ -58,47 +59,38 @@ public class EventController {
                 "Delete Event Success", null));
     }
 
-    @PostMapping("/{eventId}/comments")
-    public ResponseEntity<ResponseObject> addCommentToEvent(@PathVariable(name = "eventId") String eventId,
-                                                            @RequestHeader("Authorization") String token,
-                                                            @RequestBody CreateCommentRequest createCommentRequest) {
+    @GetMapping("{eventId}")
+    public ResponseEntity<ResponseObject> getEventById(@PathVariable(name = "eventId") String eventId) {
+        EventResponse eventResponse = eventService.getEventById(eventId);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Comment to Event Success", eventService.addCommentToEvent(eventId, token, createCommentRequest)));
+                "Get Event By Id Success", eventResponse));
     }
 
-//    @GetMapping("statusEvent")
-//    public ResponseEntity<ResponseObject> getListEventByStatusEvent(@RequestParam(name = "statusEvent") String statusEvent,
-//                                                                    Integer page, Integer pageSize) {
-//        eventService.getListEventByStatusEvent(statusEvent, page, pageSize);
-//        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-//                "Get list event by status event success", null));
-//    }
-
-    @DeleteMapping("/{eventId}/comments")
-    public ResponseEntity<ResponseObject> deleteComment(@PathVariable(name = "eventId") String eventId,
-                                                        @RequestHeader("Authorization") String token) {
-        eventService.deleteComment(eventId, token);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Delete Comment Success", null));
-    }
-    @SneakyThrows
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getEventById(@PathVariable(name = "id") String id){
-        Optional<Event> findById = eventService.findById(id);
-        if (findById.isPresent()) {
-            Event event = eventService.getEventStatus(findById.get());
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(),"Get events with id" + id, event));
-        }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseObject(HttpStatus.NO_CONTENT.value(),"Event with id " + id + "is empty!",null));
-    }
     @GetMapping("incoming")
     public ResponseEntity<ResponseObject> getIncomingEvents() {
         List<EventIncomingResponse> result = eventService.getIncomingEvent();
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),"Find event with success",result));
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "Find event with success",result));
     }
     @GetMapping("tree")
     public ResponseEntity<ResponseObject> getEventsInYear() {
         List<EventSearchResponse> result = eventService.listEventInYear();
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),"Find event with success",result));
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "Find event with success", result));
+    }
+
+    @GetMapping()
+    public ResponseEntity<ResponseObject> listByEventStatus(@RequestParam(required = false, defaultValue = "0") int page,
+                                                            @RequestParam(required = false, defaultValue = "24") int pageSize,
+                                                            @RequestParam(required = false) StatusEvent statusEvent) {
+        if (statusEvent == null) {
+            List<EventResponse> list = eventService.getListEvent();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject(HttpStatus.OK.value(),
+                            "GET LIST EVENT", list));
+        }
+        List<EventSearchResponse> searchResponses = eventService.listEventByStatus(page, pageSize, statusEvent);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(),
+                "GET LIST EVENT WITH STATUS" + statusEvent.name(), searchResponses));
     }
 }

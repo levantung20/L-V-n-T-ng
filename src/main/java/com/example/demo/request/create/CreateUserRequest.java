@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -13,14 +14,19 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateUserRequest {
-    private String id;
+
+    @NotBlank(message = "Avatar must not be blank")
     private String avatar;
+
+    @NotBlank(message = "Name must not be blank")
     private String name;
+
     @Email(regexp = ".+@ntq-solution.com.vn",message = "Email must end with @ntq-solution.com.vn")
     private String email;
+
     @Size(min = 8, max = 20,message = " ")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",message = "Password not valid")
     private String password;
-    private ERole role;
+
     private String key;
 }

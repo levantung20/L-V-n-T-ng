@@ -19,6 +19,4 @@ public class AccountResponse {
     private ERole eRole;
     private AccountStatus accountStatus;
     private String token;
-
-
 }

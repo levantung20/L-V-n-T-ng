@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateEventRequest {
-    private String createUserId;
     private String banner;
 
     @Size(max = 200, message = "Title's Characters is less than 200")
@@ -23,17 +22,11 @@ public class CreateEventRequest {
     @NotBlank(message = "Content must not be blank")
     private String content;
 
-    private StatusEvent status;
-
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     @NotBlank(message = "Time begin must not be blank")
     private String timeBegin;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     @NotBlank(message = "Time end must not be blank")
     private String timeEnd;
-
-    private String startTime;
-
-
 }
