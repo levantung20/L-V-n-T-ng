@@ -17,5 +17,10 @@ public class UserResponse {
     private String avatar;
 
     public UserResponse(String id, String avatar, String name, String email, ERole role, AccountStatus accountStatus, Object o) {
+        this.name = name;
+        this.age = age;
+        this.avatar = avatar;
+        this.accountStatus = accountStatus;
     }
+    private AccountStatus accountStatus;
 }

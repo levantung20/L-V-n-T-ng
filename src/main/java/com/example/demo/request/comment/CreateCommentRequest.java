@@ -1,4 +1,4 @@
-package com.example.demo.request.create;
+package com.example.demo.request.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

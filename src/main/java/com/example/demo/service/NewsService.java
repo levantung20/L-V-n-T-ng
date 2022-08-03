@@ -2,10 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.News;
-import com.example.demo.request.create.CreateCommentRequest;
-import com.example.demo.request.create.CreateNewsRequest;
-import com.example.demo.request.create.CreateSubCommentRequest;
-import com.example.demo.request.update.UpdateNewsRequest;
+import com.example.demo.request.comment.CreateCommentRequest;
+import com.example.demo.request.comment.CreateSubCommentRequest;
+import com.example.demo.request.news.CreateNewsRequest;
+import com.example.demo.request.news.UpdateNewsRequest;
 import com.example.demo.response.CommentResponse;
 import com.example.demo.response.NewSearchResponse;
 import com.example.demo.response.NewsResponse;
@@ -13,27 +13,26 @@ import com.example.demo.response.NewsResponse;
 import java.util.List;
 
 public interface NewsService {
-    public NewsResponse insert(String token, CreateNewsRequest request);
-    public NewsResponse save(String id, UpdateNewsRequest request);
+    NewsResponse insert(String token, CreateNewsRequest request);
 
-    public News findById(String id);
+    NewsResponse save(String id, UpdateNewsRequest request);
 
-    public NewSearchResponse findByHashTag(String hashTags, int page, int pageSize);
+    News findById(String id);
 
-    public NewsResponse getNewsDetailById(String newsId);
+    NewSearchResponse findByHashTag(String hashTags, int page, int pageSize);
 
-    public void deleteNewsById(String id, String token);
+    NewsResponse getNewsDetailById(String newsId);
 
-    public News addComment(String newsId, String token, CreateCommentRequest createCommentRequest);
+    void deleteNewsById(String id, String token);
 
-    public void deleteComment(String commentId, String token);
+    News addComment(String newsId, String token, CreateCommentRequest createCommentRequest);
 
-    public Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
+    void deleteComment(String commentId, String token);
 
-    public void deleteSubComment(String token, String subCommentId);
+    Comment addSubCommentToComment(String token, String commentId, CreateSubCommentRequest createSubCommentRequest);
 
-    public List<CommentResponse> getListComment(String newsId, int page, int pageSize);
+    void deleteSubComment(String token, String subCommentId);
 
-
+    List<CommentResponse> getListComment(String newsId, int page, int pageSize);
 }
 

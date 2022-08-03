@@ -1,40 +1,38 @@
 package com.example.demo.controller;
 
 import com.example.demo.annotation.RoleAdmin;
-import com.example.demo.constant.ERole;
 import com.example.demo.domain.Comment;
-import com.example.demo.domain.JWTData;
 import com.example.demo.domain.News;
-import com.example.demo.exception.UserTypeNotAllow;
-import com.example.demo.request.create.CreateCommentRequest;
-import com.example.demo.request.create.CreateNewsRequest;
-import com.example.demo.request.create.CreateSubCommentRequest;
-import com.example.demo.request.update.UpdateNewsRequest;
+import com.example.demo.request.comment.CreateCommentRequest;
+import com.example.demo.request.news.CreateNewsRequest;
+import com.example.demo.request.comment.CreateSubCommentRequest;
+import com.example.demo.request.news.UpdateNewsRequest;
 import com.example.demo.response.*;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewsService;
 import com.example.demo.util.JwtData;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("demo/v1/news/")
+@RequiredArgsConstructor
 public class NewsController {
 
-    @Autowired
-    public NewsService newsService;
-    @Autowired
-    private JwtService jwtService;
+
+    private final NewsService newsService;
+
+    private final JwtService jwtService;
 
     @RoleAdmin
     @PostMapping()
-    private ResponseEntity<ResponseObject> createNews(
+    public ResponseEntity<ResponseObject> createNews(
             @RequestHeader("Authorization") String token,
             @Valid @RequestBody CreateNewsRequest request) {
         NewsResponse newsEntity = newsService.insert(token, request);

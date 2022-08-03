@@ -15,17 +15,15 @@ import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.NewsRepository;
 import com.example.demo.repository.SubCommentRepository;
-import com.example.demo.request.create.CreateCommentRequest;
-import com.example.demo.request.create.CreateNewsRequest;
-import com.example.demo.request.create.CreateSubCommentRequest;
-import com.example.demo.request.update.UpdateNewsRequest;
+import com.example.demo.request.comment.CreateCommentRequest;
+import com.example.demo.request.news.CreateNewsRequest;
+import com.example.demo.request.comment.CreateSubCommentRequest;
+import com.example.demo.request.news.UpdateNewsRequest;
 import com.example.demo.response.NewSearchResponse;
 import com.example.demo.response.NewsResponse;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -47,7 +45,11 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsResponse insert(String token, CreateNewsRequest request) {
-        News news = newsRepository.insert(NewsConverter.convertNewsRequestToNews(token, request));
+        String userId = jwtService.parseTokenToUserId(token);
+        if (userId != null) {
+            request.setCreateUserId(userId);
+        }
+        News news = newsRepository.insert(NewsConverter.convertNewsRequestToNews(userId, request));
         return NewsConverter.convertNewsToNewsResponse(news, 0);
     }
 

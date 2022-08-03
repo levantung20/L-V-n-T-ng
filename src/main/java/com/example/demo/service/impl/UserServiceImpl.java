@@ -4,7 +4,7 @@ import com.example.demo.constant.AccountStatus;
 import com.example.demo.domain.User;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.request.update.UpdateUserRequest;
+import com.example.demo.request.user.UpdateUserRequest;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

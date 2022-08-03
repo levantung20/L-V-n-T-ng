@@ -3,9 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.annotation.RoleAdmin;
 import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
-import com.example.demo.request.create.CreateUserRequest;
+import com.example.demo.request.user.CreateUserRequest;
 import com.example.demo.domain.User;
-import com.example.demo.request.update.UpdateUserRequest;
+import com.example.demo.request.user.UpdateUserRequest;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.response.UserResponse;
 import com.example.demo.service.JwtService;
@@ -83,14 +83,15 @@ public class  UserController {
     }
 
     @RoleAdmin
-    @PutMapping("{userId}/statusUser")
-    public ResponseEntity<ResponseObject> setStatusAccoutUser(@PathVariable(name = "userId") String userId,
+    @PutMapping("{userId}/status-account")
+    public ResponseEntity<ResponseObject> setStatusAccoutUser(
+                                                            @PathVariable(name = "userId") String userId,
                                                            @RequestParam(name = "statusUser") String statusUser) {
         User user = userService.setStatusUserAccount(userId, AccountStatus.valueOf(statusUser));
         UserResponse userResponse = new UserResponse(user.getId(), user.getAvatar(),user.getName(),
                 user.getEmail(),user.getRole(),user.getAccountStatus(), null);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "CHANG STATUS USER SUCCESS", userResponse));
+                "CHANGE STATUS USER SUCCESS", userResponse));
     }
 }
 

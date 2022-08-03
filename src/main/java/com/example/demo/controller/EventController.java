@@ -3,16 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.annotation.RoleAdmin;
 import com.example.demo.constant.StatusEvent;
 import com.example.demo.domain.Event;
-import com.example.demo.request.create.CreateCommentRequest;
-import com.example.demo.request.create.CreateEventRequest;
-import com.example.demo.request.update.UpdateEventRequest;
+import com.example.demo.request.event.CreateEventRequest;
+import com.example.demo.request.event.UpdateEventRequest;
 import com.example.demo.response.EventIncomingResponse;
 import com.example.demo.response.EventResponse;
 import com.example.demo.response.EventSearchResponse;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.EventService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("demo/v1/events/")

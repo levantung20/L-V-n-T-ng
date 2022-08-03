@@ -1,8 +1,8 @@
 package com.example.demo.converter;
 
 import com.example.demo.domain.News;
-import com.example.demo.request.create.CreateNewsRequest;
-import com.example.demo.request.update.UpdateNewsRequest;
+import com.example.demo.request.news.CreateNewsRequest;
+import com.example.demo.request.news.UpdateNewsRequest;
 import com.example.demo.response.NewsResponse;
 import com.example.demo.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,9 @@ public class NewsConverter {
         return newsResponse;
     }
 
-    public static News convertNewsRequestToNews(String token, CreateNewsRequest request) {
-        String userId = jwtService.parseTokenToUserId(token);
-        if (userId != null) {
-            request.setCreateUserId(userId);
-        }
+    public static News convertNewsRequestToNews(String userId, CreateNewsRequest request) {
         News news = new News();
-        news.setCreateUserId(request.getCreateUserId());
+        news.setCreateUserId(userId);
         news.setContent(request.getContent());
         news.setTitle(request.getTitle());
         news.setCreatedDate(System.currentTimeMillis());

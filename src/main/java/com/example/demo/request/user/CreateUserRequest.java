@@ -1,6 +1,5 @@
-package com.example.demo.request.create;
+package com.example.demo.request.user;
 
-import com.example.demo.constant.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

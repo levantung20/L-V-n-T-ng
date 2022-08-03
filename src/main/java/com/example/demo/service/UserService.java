@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.constant.AccountStatus;
 import com.example.demo.domain.User;
-import com.example.demo.request.update.UpdateUserRequest;
+import com.example.demo.request.user.UpdateUserRequest;
 
 
 public interface UserService {

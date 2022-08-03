@@ -3,15 +3,12 @@ package com.example.demo.service.impl;
 import com.example.demo.constant.StatusEvent;
 import com.example.demo.converter.DateConvert;
 import com.example.demo.converter.EventConverter;
-import com.example.demo.domain.Comment;
 import com.example.demo.domain.Event;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.UserTypeNotAllow;
-import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.EventRepository;
-import com.example.demo.request.create.CreateCommentRequest;
-import com.example.demo.request.create.CreateEventRequest;
-import com.example.demo.request.update.UpdateEventRequest;
+import com.example.demo.request.event.CreateEventRequest;
+import com.example.demo.request.event.UpdateEventRequest;
 import com.example.demo.response.EventIncomingResponse;
 import com.example.demo.response.EventResponse;
 import com.example.demo.response.EventSearchResponse;
@@ -19,14 +16,11 @@ import com.example.demo.service.EventService;
 import com.example.demo.service.JwtService;
 import com.example.demo.util.JwtData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

@@ -1,4 +1,4 @@
-package com.example.demo.request.create;
+package com.example.demo.request.event;
 
 import com.example.demo.constant.StatusEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateEventRequest {
+public class UpdateEventRequest {
     private String banner;
 
     @Size(max = 200, message = "Title's Characters is less than 200")
@@ -21,6 +21,8 @@ public class CreateEventRequest {
 
     @NotBlank(message = "Content must not be blank")
     private String content;
+
+    private StatusEvent statusEvent;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @NotBlank(message = "Time begin must not be blank")

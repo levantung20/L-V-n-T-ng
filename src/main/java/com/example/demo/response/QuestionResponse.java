@@ -1,23 +1,20 @@
-package com.example.demo.request.update;
-
+package com.example.demo.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class UpdateUserRequest {
-    @Id
+@Builder
+public class QuestionResponse {
     private String id;
-
-    private String name;
-
-    private int age;
-
-    private String avatar;
+    private String createUserId;
+    private String contentQuestion;
+    private String contentAnswer;
+    private String creatTime;
 }

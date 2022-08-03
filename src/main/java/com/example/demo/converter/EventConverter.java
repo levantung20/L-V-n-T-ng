@@ -2,14 +2,10 @@ package com.example.demo.converter;
 
 import com.example.demo.constant.StatusEvent;
 import com.example.demo.domain.Event;
-import com.example.demo.request.create.CreateEventRequest;
-import com.example.demo.request.update.UpdateEventRequest;
+import com.example.demo.request.event.CreateEventRequest;
 import com.example.demo.response.EventIncomingResponse;
 import com.example.demo.response.EventResponse;
 import com.example.demo.response.EventSearchResponse;
-import com.example.demo.service.JwtService;
-
-import java.util.Date;
 
 
 public class EventConverter {
