@@ -17,4 +17,5 @@ public class QuestionResponse {
     private String contentQuestion;
     private String contentAnswer;
     private String creatTime;
+    private String categoryId;
 }
