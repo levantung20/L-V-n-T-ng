@@ -1,17 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.constant.AccountStatus;
-import com.example.demo.constant.ERole;
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.login.LoginRequest;
-import com.example.demo.response.AccountResponse;
 import com.example.demo.response.LoginResponse;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;
-import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

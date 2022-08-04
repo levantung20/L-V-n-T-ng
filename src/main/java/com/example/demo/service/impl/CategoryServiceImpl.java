@@ -34,7 +34,8 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse insertCategory(String token, CreateCategoryRequest boxRequest) {
         JwtData data = jwtService.parseToken(token);
         String userId = data.getUserId();
-        Category category = categoryRepository.insert(CategoryConverter.convertBoxRequestToBox(userId, boxRequest));
+        Category category = CategoryConverter.convertBoxRequestToBox(userId, boxRequest);
+        categoryRepository.insert(category);
         return CategoryConverter.convertCategoryToCategoryResponse(category);
     }
 

@@ -7,12 +7,14 @@ import com.example.demo.request.comment.CreateCommentRequest;
 import com.example.demo.request.news.CreateNewsRequest;
 import com.example.demo.request.comment.CreateSubCommentRequest;
 import com.example.demo.request.news.UpdateNewsRequest;
-import com.example.demo.response.*;
+import com.example.demo.response.CommentResponse;
+import com.example.demo.response.NewSearchResponse;
+import com.example.demo.response.NewsResponse;
+import com.example.demo.response.ResponseObject;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.NewsService;
 import com.example.demo.util.JwtData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -114,10 +116,10 @@ public class NewsController {
     }
 
     @RoleAdmin
-    @DeleteMapping("subcomment/{subCommentId}")
+    @DeleteMapping("{subCommentId}/subcomment")
     public ResponseEntity<ResponseObject> deleteSubCommentById(@RequestHeader("Authorization") String token,
                                                                @PathVariable(name = "subCommentId") String subCommentId) {
-        newsService.deleteComment(token, subCommentId);
+        newsService.deleteSubComment(token, subCommentId);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Delete SubComment Success", null));
     }

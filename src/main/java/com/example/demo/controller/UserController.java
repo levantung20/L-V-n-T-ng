@@ -3,12 +3,17 @@ package com.example.demo.controller;
 import com.example.demo.annotation.RoleAdmin;
 import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
+import com.example.demo.constant.RequestStatus;
+import com.example.demo.converter.RequestConverter;
+import com.example.demo.domain.Request;
+import com.example.demo.request.Request.CreateLeaveRequest;
+import com.example.demo.request.Request.CreateSoonLateRequest;
 import com.example.demo.request.user.CreateUserRequest;
 import com.example.demo.domain.User;
 import com.example.demo.request.user.UpdateUserRequest;
-import com.example.demo.response.ResponseObject;
-import com.example.demo.response.UserResponse;
+import com.example.demo.response.*;
 import com.example.demo.service.JwtService;
+import com.example.demo.service.RequestService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "demo/v1/users/")
@@ -24,6 +30,8 @@ import javax.validation.Valid;
 public class  UserController {
     private final UserService userService;
     private final JwtService jwtService;
+
+    private final RequestService requestService;
 
     @RoleAdmin
     @PostMapping("admin")
@@ -93,5 +101,47 @@ public class  UserController {
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "CHANGE STATUS USER SUCCESS", userResponse));
     }
+
+    @PostMapping("{id}/latesoon")
+    public ResponseEntity<ResponseObject> createLateSoonRequest(@Valid @RequestBody CreateSoonLateRequest createSoonLateRequest,
+                                                                @RequestHeader("Authorization") String token,
+                                                                @PathVariable("id") String id) {
+        RequestResponse response = requestService.insertLateSoonRequest(id, createSoonLateRequest);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "CREATE REQUEST SUCCESS", response));
+    }
+
+    @PostMapping("{id}/off")
+    public ResponseEntity<ResponseObject> createLeaveRequest(@Valid @RequestBody CreateLeaveRequest createLeaveRequest,
+                                                             @RequestHeader("Authorization") String token,
+                                                             @PathVariable("id") String id) {
+        RequestResponse response = requestService.insertLeaveRequest(id, createLeaveRequest);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "CREATE REQUEST SUCCESS", response));
+    }
+
+    @GetMapping("{id}/requests")
+    public ResponseEntity<ResponseObject> findAll(@PathVariable("id") String id) {
+        List<RequestByUserIdResponse> list = requestService.findListRequestByUserId(id);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "GET LIST REQUEST", list));
+    }
+
+    @GetMapping("{id}/requests/toApprove")
+    public ResponseEntity<ResponseObject> findAllRequestsNeedToApprove(@RequestHeader("Authorization") String token,
+                                                                       @PathVariable("id") String id) {
+        List<RequestByUserIdResponse> list = requestService.findListRequestByReceiverEmail(id);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "GET LIST REQUEST", list));
+    }
+
+    @PutMapping({"requests/{requestId}/{status}"})
+    public ResponseEntity<ResponseObject> approveRequest(@PathVariable(name = "requestId") String requestId,
+                                                         @PathVariable(name = "status") RequestStatus status,
+                                                         @RequestHeader("Authorization") String token) {
+        ListRequestResponse response = requestService.approveRequest(requestId, status, token);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Request status set to " + status, response));
+    }
+
 }
 

@@ -1,6 +1,5 @@
 package com.example.demo.response;
 
-import com.example.demo.domain.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

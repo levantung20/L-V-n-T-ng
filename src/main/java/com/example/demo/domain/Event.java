@@ -47,4 +47,5 @@ public class Event {
     private Long lastUpdateTime;
 
     private List<Comment> comments = new ArrayList<>();
+
 }

@@ -1,7 +1,6 @@
 package com.example.demo.exception.handler;
 
 import com.example.demo.exception.CommentNotFoundException;
-import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.response.ResponseObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

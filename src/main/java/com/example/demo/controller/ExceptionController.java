@@ -4,7 +4,6 @@ import com.example.demo.response.ResponseObject;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoWriteException;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.text.ParseException;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice

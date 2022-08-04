@@ -6,8 +6,6 @@ import com.example.demo.request.category.UpdateCategoryRequest;
 import com.example.demo.response.CategoryResponse;
 import com.example.demo.response.ListCategoryResponse;
 
-import java.util.List;
-
 public interface CategoryService {
     CategoryResponse insertCategory(String token, CreateCategoryRequest boxRequest);
 
