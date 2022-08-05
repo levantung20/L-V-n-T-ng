@@ -20,11 +20,11 @@ public class CreateUserRequest {
     @NotBlank(message = "Name must not be blank")
     private String name;
 
-    @Email(regexp = ".+@ntq-solution.com.vn",message = "Email must end with @ntq-solution.com.vn")
+    @Email(regexp = ".+@ntq-solution.com.vn", message = "Email must end with @ntq-solution.com.vn")
     private String email;
 
-    @Size(min = 8, max = 20,message = " ")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",message = "Password not valid")
+    @Size(min = 8, max = 20, message = " ")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", message = "Password not valid")
     private String password;
 
     private String key;

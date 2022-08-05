@@ -8,7 +8,6 @@ import com.example.demo.response.RequestByUserIdResponse;
 import com.example.demo.response.RequestResponse;
 
 import java.util.List;
-import java.util.ListResourceBundle;
 
 
 public interface RequestService {
@@ -20,8 +19,7 @@ public interface RequestService {
 
     List<RequestByUserIdResponse> findListRequestByReceiverEmail(String id);
 
-    ListRequestResponse approveRequest(String requestId, RequestStatus status, String token);
-
+    ListRequestResponse approveRequest(String requestId, String token, String status);
 
 
 }

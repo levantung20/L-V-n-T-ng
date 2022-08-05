@@ -4,12 +4,10 @@ import com.example.demo.annotation.RoleAdmin;
 import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
 import com.example.demo.constant.RequestStatus;
-import com.example.demo.converter.RequestConverter;
-import com.example.demo.domain.Request;
+import com.example.demo.domain.User;
 import com.example.demo.request.Request.CreateLeaveRequest;
 import com.example.demo.request.Request.CreateSoonLateRequest;
 import com.example.demo.request.user.CreateUserRequest;
-import com.example.demo.domain.User;
 import com.example.demo.request.user.UpdateUserRequest;
 import com.example.demo.response.*;
 import com.example.demo.service.JwtService;
@@ -27,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "demo/v1/users/")
 @RequiredArgsConstructor
-public class  UserController {
+public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
 
@@ -74,8 +72,8 @@ public class  UserController {
 
     @PutMapping("{userId}")
     public ResponseEntity<ResponseObject> updateUserInfor(@RequestHeader("Authorization") String token,
-                                                     @PathVariable(name = "userId") String userId,
-                                                    @RequestBody UpdateUserRequest updateUserRequest) {
+                                                          @PathVariable(name = "userId") String userId,
+                                                          @RequestBody UpdateUserRequest updateUserRequest) {
         String userId1 = jwtService.parseTokenToUserId(token);
         if (userId1.equals(userId)) {
             User user = userService.updateUser(userId, updateUserRequest);
@@ -93,11 +91,11 @@ public class  UserController {
     @RoleAdmin
     @PutMapping("{userId}/status-account")
     public ResponseEntity<ResponseObject> setStatusAccoutUser(
-                                                            @PathVariable(name = "userId") String userId,
-                                                           @RequestParam(name = "statusUser") String statusUser) {
+            @PathVariable(name = "userId") String userId,
+            @RequestParam(name = "statusUser") String statusUser) {
         User user = userService.setStatusUserAccount(userId, AccountStatus.valueOf(statusUser));
-        UserResponse userResponse = new UserResponse(user.getId(), user.getAvatar(),user.getName(),
-                user.getEmail(),user.getRole(),user.getAccountStatus(), null);
+        UserResponse userResponse = new UserResponse(user.getId(), user.getAvatar(), user.getName(),
+                user.getEmail(), user.getRole(), user.getAccountStatus(), null);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "CHANGE STATUS USER SUCCESS", userResponse));
     }
@@ -135,12 +133,12 @@ public class  UserController {
                 "GET LIST REQUEST", list));
     }
 
-    @PutMapping({"requests/{requestId}/{status}"})
+    @PutMapping({"requests/{requestId}"})
     public ResponseEntity<ResponseObject> approveRequest(@PathVariable(name = "requestId") String requestId,
-                                                         @PathVariable(name = "status") RequestStatus status,
-                                                         @RequestHeader("Authorization") String token) {
-        ListRequestResponse response = requestService.approveRequest(requestId, status, token);
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Request status set to " + status, response));
+                                                         @RequestHeader("Authorization") String token,
+                                                         @RequestBody String status) {
+        ListRequestResponse response = requestService.approveRequest(requestId, token, status);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Request status set to " , response));
     }
 
 }

@@ -15,6 +15,7 @@ public class UserResponse {
     private int age;
 
     private String avatar;
+    private AccountStatus accountStatus;
 
     public UserResponse(String id, String avatar, String name, String email, ERole role, AccountStatus accountStatus, Object o) {
         this.name = name;
@@ -22,5 +23,4 @@ public class UserResponse {
         this.avatar = avatar;
         this.accountStatus = accountStatus;
     }
-    private AccountStatus accountStatus;
 }

@@ -7,7 +7,6 @@ import com.example.demo.request.Request.CreateLeaveRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
@@ -81,10 +80,10 @@ public class DateConvert {
         if (leaveRequest.getShiftStart().equals(leaveRequest.getShiftEnd())) {
             if (startDate.equals(endDate)) {
                 return 0.5;
+            }
+            return result - 0.5;
         }
-        return result - 0.5;
-    }
-    return result;
+        return result;
     }
 
 }

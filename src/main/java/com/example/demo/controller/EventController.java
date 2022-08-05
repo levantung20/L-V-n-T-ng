@@ -30,7 +30,7 @@ public class EventController {
     @RoleAdmin
     @PostMapping()
     public ResponseEntity<ResponseObject> createEvent(@Valid @RequestHeader("Authorization") String token,
-                                                       @RequestBody CreateEventRequest createEventRequest) throws Exception {
+                                                      @RequestBody CreateEventRequest createEventRequest) throws Exception {
         EventResponse eventResponse = eventService.insert(token, createEventRequest);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Create Event success", eventResponse));
@@ -41,12 +41,13 @@ public class EventController {
     public ResponseEntity<ResponseObject> updateEvent(@PathVariable(name = "eventId") String eventId,
                                                       @Valid
                                                       @RequestBody UpdateEventRequest updateEventRequest,
-                                                      @RequestHeader("Authorization") String token){
+                                                      @RequestHeader("Authorization") String token) {
 
         Event event = eventService.save(updateEventRequest, eventId, token);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "Update Event Success", event));
     }
+
     @RoleAdmin
     @DeleteMapping("{eventId}")
     public ResponseEntity<ResponseObject> deleteEventById(@PathVariable(name = "eventId") String eventId,
@@ -67,8 +68,9 @@ public class EventController {
     public ResponseEntity<ResponseObject> getIncomingEvents() {
         List<EventIncomingResponse> result = eventService.getIncomingEvent();
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
-                "Find event with success",result));
+                "Find event with success", result));
     }
+
     @GetMapping("tree")
     public ResponseEntity<ResponseObject> getEventsInYear() {
         List<EventSearchResponse> result = eventService.listEventInYear();

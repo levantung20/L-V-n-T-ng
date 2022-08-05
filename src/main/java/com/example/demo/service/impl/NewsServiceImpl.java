@@ -1,24 +1,24 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.converter.DateConvert;
+import com.example.demo.converter.NewsConverter;
+import com.example.demo.converter.SubCommentConverter;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.News;
 import com.example.demo.domain.SubComment;
 import com.example.demo.domain.User;
 import com.example.demo.exception.CommentNotFoundException;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.response.CommentResponse;
-import com.example.demo.converter.DateConvert;
-import com.example.demo.converter.NewsConverter;
-import com.example.demo.converter.SubCommentConverter;
 import com.example.demo.exception.EventNotFoundException;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.NewsRepository;
 import com.example.demo.repository.SubCommentRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.request.comment.CreateCommentRequest;
-import com.example.demo.request.news.CreateNewsRequest;
 import com.example.demo.request.comment.CreateSubCommentRequest;
+import com.example.demo.request.news.CreateNewsRequest;
 import com.example.demo.request.news.UpdateNewsRequest;
+import com.example.demo.response.CommentResponse;
 import com.example.demo.response.NewSearchResponse;
 import com.example.demo.response.NewsResponse;
 import com.example.demo.service.JwtService;
@@ -61,7 +61,7 @@ public class NewsServiceImpl implements NewsService {
         }
         News updateEntity = news.get();
         NewsConverter.convertNewsRequestToNews1(request, updateEntity);
-        News news1 =  newsRepository.save(updateEntity);
+        News news1 = newsRepository.save(updateEntity);
         return NewsConverter.convertNewsToNewsResponse(news1, 0);
     }
 

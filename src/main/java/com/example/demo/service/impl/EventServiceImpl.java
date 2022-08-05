@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
     private final JwtService jwtService;
     private final EventRepository eventRepository;
+
     @Override
     public EventResponse insert(String token, CreateEventRequest createEventRequest) throws Exception {
         JwtData jwtData = jwtService.parseToken(token);
@@ -75,16 +76,16 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll()
                 .stream()
                 .map(event ->
-                    EventResponse.builder()
-                            .id(event.getId())
-                            .title(event.getTitle())
-                            .banner(event.getBanner())
-                            .content(event.getContent())
-                            .statusEvent(event.getStatusEvent())
-                            .timeBegin(DateConvert.convertLongToDate(event.getTimeBegin()))
-                            .timeEnd(DateConvert.convertLongToDate(event.getTimeEnd()))
-                            .build()
-                        )
+                        EventResponse.builder()
+                                .id(event.getId())
+                                .title(event.getTitle())
+                                .banner(event.getBanner())
+                                .content(event.getContent())
+                                .statusEvent(event.getStatusEvent())
+                                .timeBegin(DateConvert.convertLongToDate(event.getTimeBegin()))
+                                .timeEnd(DateConvert.convertLongToDate(event.getTimeEnd()))
+                                .build()
+                )
                 .collect(Collectors.toList());
     }
 

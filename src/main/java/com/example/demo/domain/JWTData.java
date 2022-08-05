@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class JWTData {
-   private String userId;
-   private String email;
-   private String role;
+    private String userId;
+    private String email;
+    private String role;
 }

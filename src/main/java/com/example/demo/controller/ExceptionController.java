@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.CustomException;
 import com.example.demo.response.ResponseObject;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoWriteException;
@@ -23,6 +24,7 @@ public class ExceptionController {
                 ex.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(",")),
                 null);
     }
+
     @ExceptionHandler(value = {DuplicateKeyException.class, MongoWriteException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseObject emailDuplicateException(MongoWriteException ex, WebRequest request) {
@@ -31,6 +33,7 @@ public class ExceptionController {
                 "Email has already taken!",
                 null);
     }
+
     @ExceptionHandler(value = {ParseException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseObject emailDuplicateException(ParseException ex, WebRequest request) {
@@ -39,4 +42,14 @@ public class ExceptionController {
                 "Fail to parse time from string to long!",
                 null);
     }
+    @ExceptionHandler(value = {CustomException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseObject customExceptionHandler(CustomException ex, WebRequest request) {
+        return new ResponseObject(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null);
+    }
+
+
 }

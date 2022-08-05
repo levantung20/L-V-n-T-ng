@@ -14,4 +14,5 @@ public interface QuestionService {
     QuestionResponse getQuestionById(String questionId);
 
     QuestionResponse repQuestionOfUser(String token, UpdateQuestionRequest updateQuestionRequest, String questionId);
+
 }

@@ -1,2 +1,15 @@
-package com.example.demo.response;public class ListQuestionReponse {
+package com.example.demo.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ListQuestionResponse {
+    private String id;
+    private String content;
 }

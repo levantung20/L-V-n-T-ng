@@ -1,9 +1,7 @@
 package com.example.demo.domain;
 
-import com.example.demo.constant.Reasons;
 import com.example.demo.constant.RequestStatus;
 import com.example.demo.constant.RequestType;
-import com.example.demo.constant.Shift;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +20,7 @@ public class Request {
     private String userId;
     private String requestTitle;
     private String message;
-    private String dayRequest;
+    private String dayRequest; // AFTERNOON - 28/7/2022
     private double numDayOff;
     private String timeNeed;
     private int yearRequest;
@@ -30,5 +28,7 @@ public class Request {
     private RequestType requestType;
     private RequestStatus requestStatus;
     private String receiverEmail;
+
+    //
     private int timeRemainInWeek;
 }

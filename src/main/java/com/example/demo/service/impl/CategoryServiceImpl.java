@@ -3,13 +3,13 @@ package com.example.demo.service.impl;
 import com.example.demo.converter.CategoryConverter;
 import com.example.demo.converter.DateConvert;
 import com.example.demo.domain.Category;
+import com.example.demo.exception.CustomException;
 import com.example.demo.exception.NewsNotFoundException;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.QuestionRepository;
 import com.example.demo.request.category.CreateCategoryRequest;
 import com.example.demo.request.category.UpdateCategoryRequest;
-import com.example.demo.response.CategoryResponse;
-import com.example.demo.response.ListCategoryResponse;
+import com.example.demo.response.*;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.JwtService;
 import com.example.demo.util.JwtData;
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category save(String token, UpdateCategoryRequest request, String categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (categoryId.isEmpty()) {
-            throw new NewsNotFoundException("CATEGORY ID DOES NOT EXIST");
+            throw new CustomException(ResponseObject.MESSAGE_CATEGORY_NOT_FOUND + categoryId);
         }
         Category updateCategory = category.get();
         JwtData data = jwtService.parseToken(token);
@@ -55,13 +55,13 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategoryById(String token, String boxId) throws Exception {
         JwtData data = jwtService.parseToken(token);
         String createBoxBy = data.getUserId();
-        Category category = categoryRepository.findById(boxId).get();
-        if (!createBoxBy.equals(category.getCreateUserId())) {
-            throw new Exception("CAN'T DELETE BECAUSE DON'T HAVE PERMISSION");
+        Optional<Category> category = categoryRepository.findById(boxId);
+        if (category.isEmpty()) {
+            throw new CustomException(ResponseObject.MESSAGE_CATEGORY_NOT_FOUND);
         }
-
-        if (category == null) {
-            throw new Exception("BOX ID DOES NOT EXIST");
+        Category category1 = category.get();
+        if (!createBoxBy.equals(category1.getCreateUserId())) {
+            throw new CustomException(ResponseObject.MESSAGE_CATEGORY_NOT_FOUND + boxId);
         }
         categoryRepository.deleteById(boxId);
     }
@@ -85,5 +85,20 @@ public class CategoryServiceImpl implements CategoryService {
                 .limit(pageSize)
                 .collect(Collectors.toList());
         return new ListCategoryResponse(collect);
+    }
+
+    @Override
+    public List<ListQuestionResponse> findAllQuestionByCategoryId(String categoryId) {
+        List<ListQuestionResponse> questionResponses = questionRepository.findAllByCategoryIdOrderByCreateTimeDesc(categoryId)
+                .stream()
+                .map(question ->
+                    ListQuestionResponse.builder()
+                            .id(question.getId())
+                            .content(question.getContentQuestion())
+                            .build()
+                )
+                .collect(Collectors.toList());
+
+        return questionResponses;
     }
 }

@@ -14,7 +14,7 @@ public interface RequestRepository extends MongoRepository<Request, String> {
 
     Request findFirstByUserIdOrderByIdDesc(String userId);
 
-    List<Request> findRequestByYearRequestAndRequestType(int year, RequestType type);
+    List<Request> findRequestsByYearRequestAndRequestTypeAndUserId(int year, RequestType type, String userId);
 
     List<Request> findRequestsByUserIdOrderByCreateTimeAsc(String userId);
 

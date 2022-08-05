@@ -1,20 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.constant.ERole;
-import com.example.demo.domain.JWTData;
 import com.example.demo.util.JwtData;
 import io.jsonwebtoken.Claims;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class JwtService{
+public class JwtService {
     private static final String KEY = "a-very-secure-server-key-of-phoenix";
 
     public String generateToken(String userId, String email, ERole role) {
@@ -38,7 +35,7 @@ public class JwtService{
         return claims.get("role").toString();
     }
 
-    public String parseTokenToUserId(String token){
+    public String parseTokenToUserId(String token) {
         if (token == null) {
             return null;
         }
@@ -48,7 +45,7 @@ public class JwtService{
     }
 
 
-    public Map<String, Object>  parseTokenToClaims(String token) {
+    public Map<String, Object> parseTokenToClaims(String token) {
         Map<String, Object> claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build().
                 parseClaimsJws(token).getBody();
         return claims;

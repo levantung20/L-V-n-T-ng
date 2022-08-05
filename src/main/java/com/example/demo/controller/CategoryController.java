@@ -6,14 +6,17 @@ import com.example.demo.request.category.CreateCategoryRequest;
 import com.example.demo.request.category.UpdateCategoryRequest;
 import com.example.demo.response.CategoryResponse;
 import com.example.demo.response.ListCategoryResponse;
+import com.example.demo.response.ListQuestionResponse;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("demo/v1/category/")
@@ -24,7 +27,7 @@ public class CategoryController {
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> creatCategory(@RequestHeader("Authorization") String token,
-                                                   @Valid @RequestBody CreateCategoryRequest boxRequest) {
+                                                        @Valid @RequestBody CreateCategoryRequest boxRequest) {
         CategoryResponse boxResponse = categoryService.insertCategory(token, boxRequest);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "CREATE CATEGORY SUCCESS", boxResponse));
@@ -33,7 +36,7 @@ public class CategoryController {
     @RoleAdmin
     @PutMapping("{boxId}")
     public ResponseEntity<ResponseObject> updateCategory(@RequestHeader("Authorization") String token,
-                                                        @Valid @RequestBody UpdateCategoryRequest boxRequest,
+                                                         @Valid @RequestBody UpdateCategoryRequest boxRequest,
                                                          @PathVariable(name = "boxId") String categoryId) {
         Category category = categoryService.save(token, boxRequest, categoryId);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
@@ -43,7 +46,7 @@ public class CategoryController {
     @RoleAdmin
     @DeleteMapping("{boxId}")
     public ResponseEntity<ResponseObject> deleteCategory(@RequestHeader("Authorization") String token,
-                                                    @PathVariable(name = "boxId") String boxId) throws Exception {
+                                                         @PathVariable(name = "boxId") String boxId) throws Exception {
         categoryService.deleteCategoryById(token, boxId);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "DELETE CATEGORY BY ID SUCCESS", null));
@@ -55,5 +58,12 @@ public class CategoryController {
         ListCategoryResponse listCategoryResponse = categoryService.getListCategory(page, pageSize);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "GET LIST CATEGORY SUCCESS", listCategoryResponse));
+    }
+
+    @GetMapping("{categoryId}/questions")
+    public ResponseEntity<ResponseObject> getListQuestionByCategoryId(@PathVariable("categoryId") String categoryId) {
+        List<ListQuestionResponse> questionResponseList = categoryService.findAllQuestionByCategoryId(categoryId);
+        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
+                "GET LIST QUESTION BY CATEGORYID SUCCESS", questionResponseList));
     }
 }

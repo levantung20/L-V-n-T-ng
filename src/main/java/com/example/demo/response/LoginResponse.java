@@ -1,7 +1,6 @@
 package com.example.demo.response;
 
 
-import com.example.demo.constant.AccountStatus;
 import com.example.demo.constant.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;

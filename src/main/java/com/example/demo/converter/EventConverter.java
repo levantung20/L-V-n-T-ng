@@ -15,13 +15,12 @@ public class EventConverter {
                 .id(event.getId())
                 .title(event.getTitle())
                 .banner(event.getBanner())
-                .statusEvent(DateConvert.checkEvent(event.getTimeBegin(),event.getTimeEnd()))
+                .statusEvent(DateConvert.checkEvent(event.getTimeBegin(), event.getTimeEnd()))
                 .content(event.getContent())
                 .timeBegin(DateConvert.convertLongToDate(event.getTimeBegin()))
                 .timeEnd(DateConvert.convertLongToDate(event.getTimeEnd()))
                 .build();
     }
-
 
 
     public static EventIncomingResponse convertToIncomingResponse(Event event) {
@@ -37,7 +36,7 @@ public class EventConverter {
         return EventSearchResponse.builder()
                 .id(event.getId())
                 .title(event.getTitle())
-                .statusEvent(DateConvert.checkEvent(event.getTimeBegin(),event.getTimeEnd()))
+                .statusEvent(DateConvert.checkEvent(event.getTimeBegin(), event.getTimeEnd()))
                 .timeBegin(DateConvert.convertLongToDate(event.getTimeBegin()))
                 .build();
     }

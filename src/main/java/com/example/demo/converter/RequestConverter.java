@@ -7,10 +7,24 @@ import com.example.demo.request.Request.CreateLeaveRequest;
 import com.example.demo.request.Request.CreateSoonLateRequest;
 import com.example.demo.response.ListRequestResponse;
 import com.example.demo.response.RequestResponse;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Calendar;
 
+@Component
 public class RequestConverter {
+
+    private static ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapperObj;
+
+    @PostConstruct
+    private  void postConstruct() {
+        modelMapper = this.modelMapperObj;
+    }
 
     public static Request convertRequestLeaveToOffResponse(String userId, CreateLeaveRequest createLeaveRequest) {
         return Request.builder()
@@ -27,7 +41,7 @@ public class RequestConverter {
                 .build();
     }
 
-    public static RequestResponse convertReponseFromOff(Request request, double remain) {
+    public static RequestResponse convertResponseFromOff(Request request, double remain) {
         return RequestResponse.builder()
                 .id(request.getId())
                 .requestTitle(request.getRequestTitle())
@@ -71,18 +85,26 @@ public class RequestConverter {
                 .build();
     }
 
-    public static int countTimeRemaining(String dayNewRequest, String dayOldRequest, int oldRemain){
+    public static int countTimeRemaining(String dayNewRequest, String dayOldRequest, int oldRemain) {
+        // TODO - Mục đích: convert 2 ngày xem cái tuần của ngày request mới, và ngày request nghỉ cũ có trùng nhau hay không?
+        //  Nếu trùng nhau, tức là trong 1 tuần đồng chí này nghỉ 2 ngày => trả về 0 (ZERO). Ngược lại, 2 tuần khác nhau,
+        //  tức là đồng chí này nghỉ 2 ngày khác nhau (không cùng trong 1 tuần) => trả về 1.
+
+        // TODO: Split date part from dayOldRequest
+        //  dayOldRequest: AFTERNOON - 28/7/2022 (this value is invalid datetime format)
         String[] split = dayOldRequest.split(" - ");
         long millisNew = DateConvert.fromStringToMillis(dayNewRequest);
-        long millisOld = DateConvert.fromStringToMillis(dayOldRequest);
+        long millisOld = DateConvert.fromStringToMillis(split[1]);
+
         Calendar calendarNew = Calendar.getInstance();
         calendarNew.setTimeInMillis(millisNew);
         Calendar calendarOld = Calendar.getInstance();
         calendarOld.setTimeInMillis(millisOld);
+
         int week1 = calendarNew.get(Calendar.WEEK_OF_YEAR);
         int week2 = calendarOld.get(Calendar.WEEK_OF_YEAR);
         if (week1 == week2) {
-                return oldRemain - 1;
+            return oldRemain - 1;
         }
         return 1;
     }
@@ -95,13 +117,18 @@ public class RequestConverter {
     }
 
     public static RequestResponse toResponseFromLate(Request request, int remain) {
-        return RequestResponse.builder()
-                .id(request.getId())
-                .requestTitle(request.getRequestTitle())
-                .requestStatus(request.getRequestStatus())
-                .timeRequest(request.getDayRequest())
-                .timeNeed(RequestConverter.getTimeNeed(request))
-                .build();
+//        return RequestResponse.builder()
+//                .id(request.getId())
+//                .requestTitle(request.getRequestTitle())
+//                .requestStatus(request.getRequestStatus())
+//                .timeRequest(request.getDayRequest())
+//                .timeNeed(RequestConverter.getTimeNeed(request))
+//                .build();
+
+        RequestResponse response = modelMapper.map(request, RequestResponse.class);
+        response.setTimeNeed(getTimeNeed(request));
+        response.setTimeRemain(remain + " time in week");
+        return response;
     }
 
     public static ListRequestResponse toResponse(Request request) {

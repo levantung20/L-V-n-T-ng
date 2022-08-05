@@ -4,8 +4,8 @@ import com.example.demo.annotation.RoleAdmin;
 import com.example.demo.domain.Comment;
 import com.example.demo.domain.News;
 import com.example.demo.request.comment.CreateCommentRequest;
-import com.example.demo.request.news.CreateNewsRequest;
 import com.example.demo.request.comment.CreateSubCommentRequest;
+import com.example.demo.request.news.CreateNewsRequest;
 import com.example.demo.request.news.UpdateNewsRequest;
 import com.example.demo.response.CommentResponse;
 import com.example.demo.response.NewSearchResponse;
@@ -44,7 +44,7 @@ public class NewsController {
 
     @GetMapping()
     public ResponseEntity<ResponseObject> findAllNewsByHashTag(@RequestParam("hashTag") String hashTag,
-                                                               @RequestParam(defaultValue = "0", required = false) int page ,
+                                                               @RequestParam(defaultValue = "0", required = false) int page,
                                                                @RequestParam(defaultValue = "24", required = false) int pageSize) {
         NewSearchResponse newsResponse = newsService.findByHashTag(hashTag, page, pageSize);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
@@ -126,7 +126,7 @@ public class NewsController {
 
     @GetMapping("{newsId}/comments")
     public ResponseEntity<ResponseObject> getListCommentByNewsId(@PathVariable(name = "newsId") String newsId,
-                                                                 @RequestParam(defaultValue = "0", required = false) int page ,
+                                                                 @RequestParam(defaultValue = "0", required = false) int page,
                                                                  @RequestParam(defaultValue = "24", required = false) int pageSize) {
         List<CommentResponse> commentResponse = newsService.getListComment(newsId, page, pageSize);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),

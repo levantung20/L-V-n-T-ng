@@ -1,6 +1,5 @@
 package com.example.demo.request.event;
 
-import com.example.demo.constant.StatusEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
