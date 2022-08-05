@@ -30,6 +30,7 @@ public class JwtService {
         if (token == null) {
             return null;
         }
+        token = token.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
         return claims.get("role").toString();
@@ -39,6 +40,7 @@ public class JwtService {
         if (token == null) {
             return null;
         }
+        token = token.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build()
                 .parseClaimsJws(token).getBody();
         return claims.get("userId").toString();
@@ -46,6 +48,7 @@ public class JwtService {
 
 
     public Map<String, Object> parseTokenToClaims(String token) {
+        token = token.replace("Bearer ","");
         Map<String, Object> claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build().
                 parseClaimsJws(token).getBody();
         return claims;
@@ -53,6 +56,7 @@ public class JwtService {
 
 
     public JwtData parseToken(String token) {
+        token = token.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder().setSigningKey(KEY.getBytes()).build().
                 parseClaimsJws(token).getBody();
         JwtData result = JwtData.builder()
