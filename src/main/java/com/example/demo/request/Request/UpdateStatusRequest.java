@@ -1,2 +1,12 @@
-package com.example.demo.request.Request;public class UpdateStatusRequest {
+package com.example.demo.request.Request;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UpdateStatusRequest {
+    private String status;
 }

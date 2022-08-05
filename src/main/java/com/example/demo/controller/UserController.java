@@ -7,6 +7,7 @@ import com.example.demo.constant.RequestStatus;
 import com.example.demo.domain.User;
 import com.example.demo.request.Request.CreateLeaveRequest;
 import com.example.demo.request.Request.CreateSoonLateRequest;
+import com.example.demo.request.Request.UpdateStatusRequest;
 import com.example.demo.request.user.CreateUserRequest;
 import com.example.demo.request.user.UpdateUserRequest;
 import com.example.demo.response.*;
@@ -136,7 +137,7 @@ public class UserController {
     @PutMapping({"requests/{requestId}"})
     public ResponseEntity<ResponseObject> approveRequest(@PathVariable(name = "requestId") String requestId,
                                                          @RequestHeader("Authorization") String token,
-                                                         @RequestBody String status) {
+                                                         @RequestBody UpdateStatusRequest status) {
         ListRequestResponse response = requestService.approveRequest(requestId, token, status);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Request status set to " , response));
     }

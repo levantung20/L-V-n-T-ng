@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.constant.RequestStatus;
 import com.example.demo.request.Request.CreateLeaveRequest;
 import com.example.demo.request.Request.CreateSoonLateRequest;
+import com.example.demo.request.Request.UpdateStatusRequest;
 import com.example.demo.response.ListRequestResponse;
 import com.example.demo.response.RequestByUserIdResponse;
 import com.example.demo.response.RequestResponse;
@@ -19,7 +20,7 @@ public interface RequestService {
 
     List<RequestByUserIdResponse> findListRequestByReceiverEmail(String id);
 
-    ListRequestResponse approveRequest(String requestId, String token, String status);
+    ListRequestResponse approveRequest(String requestId, String token, UpdateStatusRequest status);
 
 
 }

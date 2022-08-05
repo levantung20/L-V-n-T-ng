@@ -12,6 +12,7 @@ import com.example.demo.repository.RequestRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.Request.CreateLeaveRequest;
 import com.example.demo.request.Request.CreateSoonLateRequest;
+import com.example.demo.request.Request.UpdateStatusRequest;
 import com.example.demo.response.ListRequestResponse;
 import com.example.demo.response.RequestByUserIdResponse;
 import com.example.demo.response.RequestResponse;
@@ -125,7 +126,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ListRequestResponse approveRequest(String requestId, String token, String status) {
+    public ListRequestResponse approveRequest(String requestId, String token, UpdateStatusRequest status) {
         JwtData data = jwtService.parseToken(token);
         String email = data.getEmail();
         Optional<Request> optionalRequest = requestRepository.findRequestsByIdAndReceiverEmail(requestId, email);
@@ -138,8 +139,8 @@ public class RequestServiceImpl implements RequestService {
         ListRequestResponse response = RequestConverter.toResponse(save);
         return response;
     }
-    public static RequestStatus getStatusFromString(String status) {
-        if (RequestStatus.REJECTED.toString().equalsIgnoreCase(status)) {
+    public static RequestStatus getStatusFromString(UpdateStatusRequest status) {
+        if (RequestStatus.REJECTED.toString().equalsIgnoreCase(status.getStatus())) {
             return RequestStatus.REJECTED;
         }
         return RequestStatus.APPROVED;
