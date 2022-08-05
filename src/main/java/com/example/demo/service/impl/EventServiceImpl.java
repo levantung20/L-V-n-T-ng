@@ -46,8 +46,13 @@ public class EventServiceImpl implements EventService {
         }
         JwtData jwtData = jwtService.parseToken(token);
         String userId = jwtData.getUserId();
+        event.setContent(updateEventRequest.getContent());
+        event.setTitle(updateEventRequest.getTitle());
         event.setUpdateUserId(userId);
         event.setLastUpdateTime(System.currentTimeMillis());
+        event.setTimeBegin(DateConvert.fromStringToMillis(updateEventRequest.getTimeBegin()));
+        event.setTimeEnd(DateConvert.fromStringToMillis(updateEventRequest.getTimeEnd()));
+        event.setStatusEvent(DateConvert.checkEvent(event.getTimeBegin(),event.getTimeEnd()));
         return eventRepository.save(event);
     }
 
