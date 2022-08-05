@@ -14,4 +14,6 @@ public interface QuestionRepository extends MongoRepository<Question, String> {
     int countAllByCategoryId(String categoryId);
 
     List<Question> findAllByCategoryIdOrderByCreateTimeDesc(String categoryId);
+
+    void deleteAllByCategoryId(String categoryId);
 }

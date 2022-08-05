@@ -52,18 +52,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategoryById(String token, String boxId) throws Exception {
+    public void deleteCategoryById(String token, String categoryId) {
         JwtData data = jwtService.parseToken(token);
         String createBoxBy = data.getUserId();
-        Optional<Category> category = categoryRepository.findById(boxId);
+        Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
             throw new CustomException(ResponseObject.MESSAGE_CATEGORY_NOT_FOUND);
         }
         Category category1 = category.get();
         if (!createBoxBy.equals(category1.getCreateUserId())) {
-            throw new CustomException(ResponseObject.MESSAGE_CATEGORY_NOT_FOUND + boxId);
+            throw new CustomException(ResponseObject.MESSAGE_CATEGORY_NOT_FOUND + categoryId);
         }
-        categoryRepository.deleteById(boxId);
+        questionRepository.deleteAllByCategoryId(categoryId);
+        categoryRepository.deleteById(categoryId);
     }
 
     @Override

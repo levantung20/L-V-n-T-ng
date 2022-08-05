@@ -9,7 +9,6 @@ import com.example.demo.response.ListCategoryResponse;
 import com.example.demo.response.ListQuestionResponse;
 import com.example.demo.response.ResponseObject;
 import com.example.demo.service.CategoryService;
-import com.example.demo.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,10 +43,10 @@ public class CategoryController {
     }
 
     @RoleAdmin
-    @DeleteMapping("{boxId}")
+    @DeleteMapping("{categoryId}")
     public ResponseEntity<ResponseObject> deleteCategory(@RequestHeader("Authorization") String token,
-                                                         @PathVariable(name = "boxId") String boxId) throws Exception {
-        categoryService.deleteCategoryById(token, boxId);
+                                                         @PathVariable(name = "categoryId") String categoryId)  {
+        categoryService.deleteCategoryById(token, categoryId);
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(),
                 "DELETE CATEGORY BY ID SUCCESS", null));
     }

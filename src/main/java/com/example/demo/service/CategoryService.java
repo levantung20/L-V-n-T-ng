@@ -15,7 +15,7 @@ public interface CategoryService {
 
     Category save(String token, UpdateCategoryRequest updateCategoryRequest, String categoryId);
 
-    void deleteCategoryById(String token, String boxId) throws Exception;
+    void deleteCategoryById(String token, String categoryId);
 
     ListCategoryResponse getListCategory(int page, int pageSize);
 
