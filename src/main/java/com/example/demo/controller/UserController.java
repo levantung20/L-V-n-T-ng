@@ -11,16 +11,20 @@ import com.example.demo.request.Request.UpdateStatusRequest;
 import com.example.demo.request.user.CreateUserRequest;
 import com.example.demo.request.user.UpdateUserRequest;
 import com.example.demo.response.*;
+import com.example.demo.service.FilesStorageService;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.RequestService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,11 +36,13 @@ public class UserController {
 
     private final RequestService requestService;
 
+    private final FilesStorageService filesStorageService;
+
     @RoleAdmin
     @PostMapping("admin")
-    public ResponseEntity<ResponseObject> createUserAdmin(@Valid @RequestBody CreateUserRequest createUserRequest,
+    public ResponseEntity<ResponseObject> createUserAdmin(@Valid @ModelAttribute CreateUserRequest createUserRequest,
                                                           @Value("${secret-key}") String SECRET_KEY)
-            throws Exception {
+            throws IOException {
         String inputCreateAdminKey = createUserRequest.getKey();
         if (inputCreateAdminKey == null || (!inputCreateAdminKey.equals(SECRET_KEY))) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
@@ -44,23 +50,32 @@ public class UserController {
                             , "UNAUTHORIZED FOR CREATE ADMIN", null));
 
         }
+
+        // Store file
+        String filePath = filesStorageService.saveFile(createUserRequest.getEmail(),
+                createUserRequest.getFile());
+
         User newAdmin = new User();
-        newAdmin.setAvatar(createUserRequest.getAvatar());
+        newAdmin.setAvatar(filePath);
         newAdmin.setName(createUserRequest.getName());
         newAdmin.setEmail(createUserRequest.getEmail());
         newAdmin.setPassword(createUserRequest.getPassword());
         newAdmin.setRole(ERole.ADMIN);
         newAdmin.setAccountStatus(AccountStatus.ACTIVE);
         userService.save(newAdmin);
+
         return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value()
                 , "CREATE ADMIN SUCCESS", newAdmin));
     }
 
     @RoleAdmin
-    @PostMapping("user")
-    public ResponseEntity<ResponseObject> creatUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    @PostMapping(value = "user",consumes = MediaType.ALL_VALUE)
+    public ResponseEntity<ResponseObject> creatUser(@Valid @ModelAttribute CreateUserRequest createUserRequest)
+            throws IOException {
+        String filePath = filesStorageService.saveFile(createUserRequest.getEmail(),
+                createUserRequest.getFile());
         User newUser = new User();
-        newUser.setAvatar(createUserRequest.getAvatar());
+        newUser.setAvatar(filePath);
         newUser.setName(createUserRequest.getName());
         newUser.setEmail(createUserRequest.getEmail());
         newUser.setPassword(createUserRequest.getPassword());

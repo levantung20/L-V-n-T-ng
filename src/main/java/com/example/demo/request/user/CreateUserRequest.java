@@ -3,6 +3,7 @@ package com.example.demo.request.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,8 +15,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class CreateUserRequest {
 
-    @NotBlank(message = "Avatar must not be blank")
-    private String avatar;
+    private MultipartFile file;
 
     @NotBlank(message = "Name must not be blank")
     private String name;
